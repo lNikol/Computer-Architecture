@@ -1,0 +1,6 @@
+AKO PYTANIA
+
+1) Co robią rozkazy fsumP (i inne z p na końcu) - chyba zdejmują ST(0) czy coś w tym (poprawnie pamiętam, sprawdzone)
+2) Rozkaz, który pushuje na stos wszystkie flagi (pushfd chyba) ?
+3) Co robi pusha?
+4) 

@@ -1,0 +1,143 @@
+Zagadnienia na pierwszy kolokwium AKO:
+
+W dniu 29.11.2024 r. o godzinie 17:15 odbędzie się kolokwium nr 1.
+
+Zakres kolokwium obejmuje materiały laboratoryjne do ćw. 3 włącznie (do konwersji binarnej), ćwiczenia (do ćwiczenia ze zmiennymi dynamicznymi na stosie, podprogram do wyświetlania liczby 64 bitowej w trybie 32 bitowym, bez programowania mieszanego) i związane z tym wiadomości podane na wykładzie (tzn. podstawowe rozkazy procesora (w tym mnożenie i dzielenie całkowite), rejestry, tryby adresowania, stos, podprogramy, operacje bitowe, kodowanie znaków,  działania na liczbach całkowitych z i bez znaku (prezentacja 1, prezentacja 2 i strony 1-27, 86-122 z prezentacji 3).  Materiał ten nie obejmuje programowania mieszanego, koprocesora i dalszych zagadnień (pozostałych stron z prezentacji 3 i dalszej).
+
+
+Lab1:
+Asemblacja i konsolidacja programu w asemblerze
+- architektura von Neumanna
+- pamięć ma organizację bajtową
+- adres fizyczny - numer komórki pamięci
+- little endian
+- big endian
+- z czego się składają wszystkie rejestry w 32 i 64 bitach
+- jakie rejestry za co odpowiadają?
+- rozkaz = instrukcja
+- na jakich rejestrach odbywają się suma, różnica, mnożenie i dzielenie i do jakich rejestrów są przechowywane odpowiednie wyniki
+- rejestr eip: wskaźnik instrukcji/licznik rozkazów
+- rozkazy (instrukcje) sterujące (skokowe) i niesterujące
+- eip + X przesunie eip na X bajtów
+- asembler oznacza także język programowania, w którym rozkazy i dane zapisywane są w postaci symbolicznej
+- rozkazy niesterujące (nie zmieniają naturalnego porządku wykonywania rozkazów)
+- zobaczyć liczbę bajtów w offset (chodzi o skróty, które różnią się od skrótów w definicji danych (db, dw itp.))
+- assembler, linker, pliki obiektowe, kod kóncowy
+- Jeśli kod asemblerowy jest łączony z kodem w języku C++, to funkcję zdefiniowaną w
+asemblerze należy deklarować jako extern ”C”.
+- w podprogramach i funkcjach pisać ret na końcu
+- kolejność przesyłania parametrów do funkcji w 32 i 64 bitowym asm
+- rejestr eip zawiera adres komórki pamięci, z której procesor pobierze kolejny rozkaz (instrukcję) do wykonania
+- w jaki sposób są zaznaczone flagi w asm i w visual studio?
+- rejestr efl (flagi)
+- jak zmieniają się wszystkie niezbędne dla nas flagi
+- jump instrukcji dwubajtowe, zakres skoku i jak zmienia się eip (slajd 29)
+- esp (sprawdzenie zawartości stosu)
+
+
+
+Lab2:
+Przetwarzanie tekstów z wykorzystaniem różnych trybów adresowania
+- punkt kodowy 
+- punkt kodowy Unicode w Hex
+- przestrzeń kodowa Unicode
+- BMP
+- UTF-8, UTF-16, UTF-32
+- w jaki sposób kodować UTF-8
+- w jaki sposób kodować UTF-16
+- w jaki sposób kodować UTF-32
+- https://youtu.be/4MFcmreAUhs?si=n8qrw-1kmZq6IlWu
+- znaki BMP co najwyżej trzy bajty w UTF-8
+- znacznik BOM
+- tabela reprezentacji UTF-8
+- przedziały (w zależności od nich różna liczba bajtów) w UTF-8 i UTF-16
+- little/big endian
+- wartości bajtów BOM dla kolejności bajtów
+- MessageBox
+- zrobić zadanie 2.2
+- zrobić zadanie 2.3
+- tryby adresowania
+- adres efektywny
+- wczytywanie danych z pamięci i w pamięć, [ebx], dword ptr, lea itp.
+- nazwy i warunki różnych skoków
+- opis wszystkich flag i warunki ich zmian
+- przepełnienie rozmiaru sterowania pętlą (do 127 bajtów) (18 slajd)
+- zadanie 2.6
+
+Lab3
+Konwersja liczb binarnych
+- jak dzielić liczby binarne? konwersja bin -> dec
+- div i idiv: jakie rejestry przechowują dzielną i dzielnik, dla różnych systemów bit (16, 32, 64, 128)
+- oszacowanie ile liczb zajmie liczba (na ćwiczeniach był podany wzór)
+- przykładowy kod dzielenia przez 10
+- rozkaz call i ślad na stosie (rozmiar śladu)
+- rozkazy pusha, popa (co pojawia się na stosie)
+- zadanie 3.1
+- rozkaz mul (slajd 6)
+- rozkaz movzx
+- rejestry ogólnego przeznaczenia w 32 i 64 bit
+- zadanie 3.3
+- dynamiczna rezerwacja zmiennych (zamiast w bloku .data)
+- konwersja bin -> hex (zobaczyć jak działa kod)
+- rozkaz rol
+- mov [edi][esi], dl - jak to działa?
+- zadania 3.4 i 4.5
+- konwersja hex -> bin (zobaczyć kod i zrozumieć jak on działa)
+- zadanie 3.6
+
+
+Ćwiczenia:
+- kody od cw1 do cw6a włącznie
+Notatki:
+- loop działa tylko z ecx
+- do 04.11.24 włącznie do zaznaczonego ołówkiem miejsca
+Zadania:
+- zrobić 15 konwersji z utf-8 na utf-16 i utf-32 na papierze
+- zrobić dzielenie 96-, 128- bitowej liczby w asm 32bit
+
+Wykłady:
+
+Prezentacja 1:
+- slajd 18 (asemblacja i linkowanie)
+- slajd 23 (słowa, dw, qw)
+- slajd 24 (adres fizyczny i fizyczna przestrzeń adresowa)
+- slajd 29-32 (rejestry ogólnego przeznaczenia)
+- slajd 42-43 (asemblery)
+- skrócona lista rozkazów 32bit
+https://enauczanie.pg.edu.pl/moodle/pluginfile.php/2412650/mod_resource/content/1/IntelCodeTable.pdf
+- slajd 47-50, 52 (eip i cykl rozkazowy)
+- slajd 56-59 (sumowanie elementów tablicy)
+- slajd 61-65 (rejestr znaczników)
+- slajd 79-83 (little/big endian, xchg i bswap)
+- slajd 86 (jak sprawdzić w systemie big/little endian w C i ASM)
+- slajd 108 (tabela utf-8)
+- slajd 114 (utf-16 w asm)
+
+Prezentacja 2:
+- slajd 5 (sektor danych niezainicjalizowanych)
+- slajd 6-14 (deklaracje zmiennych w ASM)
+- slajd 15-24 (kodowanie rozkazów w asm)
+- slajd 25-29 (rozkaz lea)
+- slajd 30-35, 38-40 (rozkazy sterujące)
+- slajd 36-37 (rejestr eip w pętlach sterujących)
+- slajd 41-62, 72-79 (tryby adresowania)
+- slajd 62-69 (działania na elementach tablic)	
+- slajd 69-71 (loop) -> Wcześniej została podana inna metoda z jmp, zamiast loop
+- slajd 83-91 (Tryb rzeczywisty i tryb chroniony w procesorach x86)
+- slajd 92-108 (stos, push, pop)
+- slajd 109-113 (call, ret) -> Jak będzie się zachowywał podprogram, jeśli nie napiszę RET? (sprawdzić)
+- slajd 117-125 (kodowania liczb) -> Zobaczyć kodowanie u2, znak moduł i jeszcze jedno kodowanie z dodawaniem jedynki po negacji wszystkich bitów
+- slajd 126-129 (struktury decyzyjne)
+- slajd 130-140 (porównywanie zawartości rejestrów i pamięci, flagi) -> Sprawdzić jaka flaga jest odpowiedzialna za nadmiar (CF lub OF)
+- slajd 141-152 (tworzenie kodu wykonywalnego) -> slajd 147 add esi, alfa [ebx] + 4 (ebx ma ujemną wartość, sprawdzić zachowanie programu
+- slajd 153-158 (licznik operacji, $)
+
+
+Prezentacja 3:
+- slajd 1-27 (przekazywanie parametrów przez stos i je otrzymanie)
+- slajd 86-122 (operacje na liczbach całkowitych z i bez znaku)
+
+
+
+
+!!!!!!!!!! pisać komentarze podczas pisania kodu asm !!!!!!!!!!!

@@ -1,0 +1,201 @@
+Microsoft (R) Macro Assembler Version 5.00                  12/11/24 17:06:21
+                                                             Page     1-1
+
+
+       1				﻿; Program gwiazdki.asm 
+laby.asm(1): warning A4001: Extra characters on line
+       2				; Wyświetlanie znaków * w takt przerw
+					ań zegarowych 
+       3				; Uruchomienie w trybie rzeczywistym pr
+					ocesora x86 
+       4				; lub na maszynie wirtualnej 
+       5				; zakończenie programu po naciśnięci
+					u klawisza 'x' 
+       6				; asemblacja (MASM 4.0): masm gwiazdki.
+					asm,,,; 
+       7				; konsolidacja (LINK 3.60): link gwiazd
+					ki.obj; 
+       8				.386 
+       9 0000				rozkazy SEGMENT use16 
+      10				ASSUME CS:rozkazy 
+      11				 
+      12 0000				kwadrat PROC 
+      13 0000  50			    push ax 
+      14 0001  53			    push bx 
+      15 0002  51			    push cx 
+      16 0003  52			    push dx 
+      17 0004  06			    push es 
+      18				 
+      19				    ; Ustawienie segmentu pamięci wide
+					o 
+      20 0005  B8 A000			    mov ax, 0A000H 
+      21 0008  8E C0			    mov es, ax 
+      22				 
+      23				    ;xor dx, dx 
+      24				    ;mov dx, cs:top_piksel 
+      25				    ; Sprawdzenie warunku końcowego 
+      26				    ;cmp dx, cs:low_piksel 
+      27				    ;jge koniec 
+      28				 
+      29				 
+      30 000A  2E: 8B 1E 0065 R		    mov bx, cs:top_piksel 
+      31 000F				maluj_gore: 
+      32 000F  2E: 89 1E 0063 R		    mov cs:adres_piksela, bx 
+      33 0014  2E: A0 0062 R		    mov al, cs:kolor 
+      34 0018  26: 88 07		    mov es:[bx], al 
+      35 001B  43			    inc bx 
+      36 001C  2E: 3B 1E 0069 R		    cmp bx, cs:prawy_piksel 
+      37 0021  7E EC			    jle maluj_gore 
+      38				 
+      39				    ; Dolna linia pozioma 
+      40 0023  2E: 8B 1E 0067 R		    mov bx, cs:low_piksel 
+      41 0028				maluj_dol: 
+      42 0028  2E: 89 1E 0063 R		    mov cs:adres_piksela, bx 
+      43 002D  2E: A0 0062 R		    mov al, cs:kolor 
+      44 0031  26: 88 07		    mov es:[bx], al 
+      45 0034  43			    inc bx 
+      46 0035  2E: 3B 1E 0069 R		    cmp bx, cs:prawy_piksel 
+      47 003A  7E EC			    jle maluj_dol 
+Microsoft (R) Macro Assembler Version 5.00                  12/11/24 17:06:21
+                                                             Page     1-2
+
+
+      48				 
+      49				 
+      50 003C				maluj_lewo: 
+      51 003C  2E: 89 1E 0063 R		    mov cs:adres_piksela, bx 
+      52 0041  2E: A0 0062 R		    mov al, cs:kolor 
+      53 0045  26: 88 07		    mov es:[bx], al 
+      54 0048  81 C3 0140		    add bx, 320 
+      55 004C  2E: 3B 1E 0067 R		    cmp bx, cs:low_piksel 
+      56 0051  7E E9			    jle maluj_lewo 
+      57				 
+      58				    ; Prawa linia pionowa 
+      59 0053  2E: 8B 1E 0069 R		    mov bx, cs:prawy_piksel 
+      60				 
+      61 0058				koniec: 
+      62 0058  07			    pop es 
+      63 0059  5A			    pop dx 
+      64 005A  59			    pop cx 
+      65 005B  5B			    pop bx 
+      66 005C  58			    pop ax 
+      67 005D  2E: FF 2E 006B R		    jmp dword PTR cs:wektor8 
+      68				 
+      69				    ; Zmienne procedury 
+      70 0062  02			    kolor db 2                
+      71 0063  0000			    adres_piksela dw 0       ; Adres bi
+					eżącego piksela 
+      72 0065  0000			    top_piksel dw 0          ; Górna g
+					ranica prostokąta 
+      73 0067  F8C0			    low_piksel dw 320 * 199  ; Dolna gr
+					anica prostokąta 
+      74 0069  013F			    prawy_piksel dw 319      ; Prawa gr
+					anica prostokąta 
+      75 006B  ????????			    wektor8 dd ?             ; Adres st
+					arego wektora przerwania 
+      76 006F				kwadrat ENDP 
+      77				 
+      78 006F				zacznij: 
+      79				    ; Ustawienie trybu graficznego 13H 
+      80 006F  B4 00			    mov ah, 0 
+      81 0071  B0 13			    mov al, 13H 
+      82 0073  CD 10			    int 10H 
+      83				 
+      84				    ; Zapamiętanie oryginalnego wektor
+					a przerwań 
+      85 0075  B8 0000			    mov ax, 0 
+      86 0078  8E C0			    mov es, ax 
+      87 007A  26: 66| A1 0020		    mov eax, es:[32] 
+      88 007F  2E: 66| A3 006B R	    mov cs:wektor8, eax 
+      89				 
+      90				    ; Ustawienie własnego przerwania z
+					egarowego 
+      91 0084  B8 ---- R		    mov ax, SEG kwadrat 
+      92 0087  BB 0000 R		    mov bx, OFFSET kwadrat 
+      93 008A  FA			    cli 
+      94 008B  26: 89 1E 0020		    mov es:[32], bx 
+Microsoft (R) Macro Assembler Version 5.00                  12/11/24 17:06:21
+                                                             Page     1-3
+
+
+      95 0090  26: A3 0022		    mov es:[32+2], ax 
+      96 0094  FB			    sti 
+      97				 
+      98 0095				czekaj: 
+      99				    ; Oczekiwanie na klawisz 'x' 
+     100 0095  B4 01			    mov ah, 1 
+     101 0097  CD 16			    int 16H 
+     102 0099  3C 78			    cmp al, 'x' 
+     103 009B  75 F8			    jne czekaj 
+     104				 
+     105				    ; Powrót do trybu tekstowego 
+     106 009D  B4 00			    mov ah, 0 
+     107 009F  B0 03			    mov al, 3H 
+     108 00A1  CD 10			    int 10H 
+     109				 
+     110				    ; Przywrócenie oryginalnego wektor
+					a przerwań 
+     111 00A3  2E: 66| A1 006B R	    mov eax, cs:wektor8 
+     112 00A8  26: 66| A3 0020		    mov es:[32], eax 
+     113				 
+     114				    ; Zakończenie programu 
+     115 00AD  B8 4C00			    mov ax, 4C00H 
+     116 00B0  CD 21			    int 21H 
+     117 00B2				rozkazy ENDS 
+     118				 
+     119 0000				stosik SEGMENT stack 
+     120 0000  0100[			db 256 dup (?) 
+     121	    ??			
+     122			 ]	
+     123				
+     124 0100				stosik ENDS 
+     125				 
+     126				END zacznij 
+Microsoft (R) Macro Assembler Version 5.00                  12/11/24 17:06:21
+                                                             Symbols-1
+
+
+
+
+                N a m e         	Size	Length	 Align	Combine Class
+
+ROZKAZY  . . . . . . . . . . . .  	16 Bit	00B2	PARA	NONE	
+STOSIK . . . . . . . . . . . . .  	32 Bit	0100	PARA	STACK	
+
+Symbols:            
+
+                N a m e         	Type	 Value	 Attr
+
+ADRES_PIKSELA  . . . . . . . . .  	L WORD	0063	ROZKAZY
+
+CZEKAJ . . . . . . . . . . . . .  	L NEAR	0095	ROZKAZY
+
+KOLOR  . . . . . . . . . . . . .  	L BYTE	0062	ROZKAZY
+KONIEC . . . . . . . . . . . . .  	L NEAR	0058	ROZKAZY
+KWADRAT  . . . . . . . . . . . .  	N PROC	0000	ROZKAZY	Length = 006F
+
+LOW_PIKSEL . . . . . . . . . . .  	L WORD	0067	ROZKAZY
+
+MALUJ_DOL  . . . . . . . . . . .  	L NEAR	0028	ROZKAZY
+MALUJ_GORE . . . . . . . . . . .  	L NEAR	000F	ROZKAZY
+MALUJ_LEWO . . . . . . . . . . .  	L NEAR	003C	ROZKAZY
+
+PRAWY_PIKSEL . . . . . . . . . .  	L WORD	0069	ROZKAZY
+
+TOP_PIKSEL . . . . . . . . . . .  	L WORD	0065	ROZKAZY
+
+WEKTOR8  . . . . . . . . . . . .  	L DWORD	006B	ROZKAZY
+
+ZACZNIJ  . . . . . . . . . . . .  	L NEAR	006F	ROZKAZY
+
+@FILENAME  . . . . . . . . . . .  	TEXT  laby		
+
+
+    123 Source  Lines
+    123 Total   Lines
+     17 Symbols
+
+  50484 + 466060 Bytes symbol space free
+
+      1 Warning Errors
+      0 Severe  Errors

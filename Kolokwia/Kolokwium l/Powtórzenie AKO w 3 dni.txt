@@ -1,0 +1,37 @@
+Powtórzenie AKO w 3 dni:
+
+
+Dzień 1:
++ prezentacja 1 bez kodowania
+- prezentacja 2 slajdy 5-71 (zaznaczone w tym przedziale)
++ lab 1
++- little/big endian
++ notatki ćw +1-3
+- kartki z rozkazami
++ kod ćw 1
+- 
+kolokwia
+
+
+Dzień 2:
+- prezentacja 1 slajdy 108, 114
+- prezentacja 2 slajdy 83 - 158 (w tym przedziale) (tryby adresowania, kodowanie liczb itp.)
+- zrobić dzielenie 96-, 128- bitowej liczby w asm 32bit
+- zrobić 15 konwersji z utf-8 na utf-16 i utf-32 na papierze
+- Kodowanie utf
+- lab 2
+- notatki ćw 4-5, 5.1, 6
+- kod ćw 2-5
+- binarne operatory napisane przy użyciu innych operatorów binarnych (np. xor na nandach itp.)
+- samemu napisać kod z kodowaniem utf8, utf16 i utf32 (gdzie był pociąg i autobus)
+
+
+Dzień 3:
+- prezentacja 3
+- lab3
+- notatki ćw 7,8
+- kod ćw 6, 6a, 7
+- zrobić dzielenie 96-, 128- bitowej liczby w asm 32bit
+- jak działa sterta w asm
+- typy adresowań w asm
+- 

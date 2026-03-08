@@ -1,0 +1,313 @@
+Microsoft (R) Macro Assembler Version 5.00                  12/10/24 21:15:47
+                                                             Page     1-1
+
+
+       1				﻿; 
+pack.asm(1): warning A4001: Extra characters on line
+       2				; 
+       3				; 
+       4				; 
+       5				.386 
+       6 0000				rozkazy SEGMENT use16 
+       7				ASSUME CS:rozkazy 
+       8 0000				clear_screen PROC 
+       9 0000  50			push ax 
+      10 0001  53			push bx 
+      11 0002  51			push cx 
+      12 0003  B8 B800			mov ax, 0B800h ;adres pamięci ekranu 
+      13 0006  8E C0			mov es, ax 
+      14 0008  BB 0000			mov bx, 0 
+      15 000B				ptl2: 
+      16 000B  26: C6 07 00		mov byte PTR es:[bx], 0 
+      17 000F  26: C6 47 01 00		mov byte PTR es:[bx+1], 00000000b 
+      18 0014  83 C3 02			add bx, 2 
+      19 0017  81 FB 0FA0		cmp bx, 4000 
+      20 001B  72 EE			jb ptl2 
+      21 001D  59			pop cx 
+      22 001E  5B			pop bx 
+      23 001F  58			pop ax 
+      24 0020  C3			ret 
+      25 0021				clear_screen ENDP 
+      26 0021				obsluga_zegara PROC 
+      27 0021  2E: 83 3E 0086 R 12	cmp cs:czas, 18 ; 18 = 1000ms 
+      28 0027  0F 82 0073 R		jb koniec_zegar 
+      29 002B  2E: C7 06 0086 R 0000	mov cs:czas, 0 
+      30 0032  2E: 80 3E 0080 R 00	cmp cs:kolor, 0 
+      31 0038  0F 84 0050 R		je CZERWONY1 
+      32 003C  2E: 80 3E 0080 R 01	cmp cs:kolor, 1 
+      33 0042  0F 84 005B R		je ZIELONY1 
+      34 0046  2E: 80 3E 0080 R 02	cmp cs:kolor, 2 
+      35 004C  0F 84 0066 R		je NIEBIESKI1 
+      36 0050				CZERWONY1: 
+      37 0050  2E: FE 06 0080 R		inc cs:kolor 
+      38 0055  E8 008A R		call maluj 
+      39 0058  EB 19 90			jmp koniec_zegar 
+      40 005B				ZIELONY1: 
+      41 005B  2E: FE 06 0080 R		inc cs:kolor 
+      42 0060  E8 008A R		call maluj 
+      43 0063  EB 0E 90			jmp koniec_zegar 
+      44 0066				NIEBIESKI1: 
+      45 0066  2E: C6 06 0080 R 00	mov cs:kolor, 0 
+      46       90			
+      47 006D  E8 008A R		call maluj 
+      48 0070  EB 01 90			jmp koniec_zegar 
+      49 0073				koniec_zegar: 
+      50 0073  2E: 83 06 0086 R 01	add cs:czas, 1 
+      51 0079  2E: FF 2E 0081 R		jmp dword PTR cs:wektor8 
+      52 007E  0000			licznik dw 0 ; Domyslnie idziemy od gor
+					y 
+Microsoft (R) Macro Assembler Version 5.00                  12/10/24 21:15:47
+                                                             Page     1-2
+
+
+      53 0080  00			kolor db 0 ; 0 - czerwien, 1-zielony, 2
+					-niebieski 
+      54 0081  ????????			wektor8 dd ? 
+      55 0085  02			klawisz db 2 ; 0 - lewo, 1- prawo, 2-go
+					ra, 3-dol 
+      56 0086  0000			czas dw 0 
+      57 0088  0000			ilosc_pomalowanych dw 0 
+      58 008A				obsluga_zegara ENDP 
+      59 008A				maluj PROC 
+      60 008A  50			push ax 
+      61 008B  53			push bx 
+      62 008C  51			push cx 
+      63 008D  B8 B800			mov ax, 0B800h 
+      64 0090  8E C0			mov es, ax 
+      65 0092  2E: 8B 1E 007E R		mov bx, cs:licznik 
+      66 0097				ptl: 
+      67 0097  26: C6 07 2A		mov byte PTR es:[bx], '*' 
+      68 009B  2E: 80 3E 0080 R 00	cmp cs:kolor, 0 
+      69 00A1  0F 84 00B9 R		je CZERWONY 
+      70 00A5  2E: 80 3E 0080 R 01	cmp cs:kolor, 1 
+      71 00AB  0F 84 00C1 R		je ZIELONY 
+      72 00AF  2E: 80 3E 0080 R 02	cmp cs:kolor, 2 
+      73 00B5  0F 84 00C9 R		je NIEBIESKI 
+      74 00B9				CZERWONY: 
+      75 00B9  26: C6 47 01 67		mov byte PTR es:[bx+1], 01100111B 
+      76 00BE  EB 11 90			jmp dalsza_czesc 
+      77 00C1				ZIELONY: 
+      78 00C1  26: C6 47 01 37		mov byte PTR es:[bx+1], 00110111B 
+      79 00C6  EB 09 90			jmp dalsza_czesc 
+      80 00C9				NIEBIESKI: 
+      81 00C9  26: C6 47 01 57		mov byte PTR es:[bx+1], 01010111B 
+      82 00CE  EB 01 90			jmp dalsza_czesc 
+      83 00D1				dalsza_czesc: 
+      84 00D1  2E: A0 0085 R		mov al, cs:klawisz 
+      85 00D5  3C 00			cmp al, 0 
+      86 00D7  0F 84 00F0 R		je LEWO 
+      87 00DB  3C 01			cmp al, 1 
+      88 00DD  0F 84 010A R		je PRAWO 
+      89 00E1  3C 02			cmp al, 2 
+      90 00E3  0F 84 0124 R		je GORA 
+      91 00E7  3C 03			cmp al, 3 
+      92 00E9  0F 84 012E R		je DOL 
+      93 00ED  EB 49 90			jmp DALEJ_RYSUJ 
+      94 00F0				LEWO: 
+      95 00F0  83 C3 02			add bx, 2 
+      96 00F3  BA 0000			mov dx, 0 
+      97 00F6  8B C3			mov ax, bx 
+      98 00F8  B9 00A0			mov cx, 160 
+      99 00FB  F7 F1			div cx ; dzielenie przez 160, jezeli re
+					szta to 80 to skaczemy do kolejnej lini
+					i 
+     100 00FD  83 FA 50			cmp dx, 80 
+     101 0100  0F 85 0138 R		jne DALEJ_RYSUJ 
+     102 0104  83 C3 50			add bx, 80 
+Microsoft (R) Macro Assembler Version 5.00                  12/10/24 21:15:47
+                                                             Page     1-3
+
+
+     103 0107  EB 2F 90			JMP DALEJ_RYSUJ 
+     104 010A				PRAWO: 
+     105 010A  83 C3 02			add bx, 2 
+     106 010D  BA 0000			mov dx, 0 
+     107 0110  8B C3			mov ax, bx 
+     108 0112  B9 00A0			mov cx, 160 
+     109 0115  F7 F1			div cx 
+     110 0117  83 FA 00			cmp dx, 0 ; jezeli reszta to 0 to skacz
+					emy do kolejnej linii 
+     111 011A  0F 85 0138 R		jne DALEJ_RYSUJ 
+     112 011E  83 C3 50			add bx, 80 
+     113 0121  EB 15 90			jmp DALEJ_RYSUJ 
+     114 0124				GORA: 
+     115 0124  83 C3 02			add bx, 2 
+     116 0127  81 FB 07D0		cmp bx, 2000 
+     117 012B  EB 0B 90			jmp DALEJ_RYSUJ 
+     118 012E				DOL: 
+     119 012E  83 C3 02			add bx, 2 
+     120 0131  81 FB 0FA0		cmp bx, 4000 
+     121 0135  EB 01 90			jmp DALEJ_RYSUJ 
+     122 0138				DALEJ_RYSUJ: 
+     123 0138  2E: FF 06 0088 R		inc cs:ilosc_pomalowanych 
+     124 013D  2E: 81 3E 0088 R 03E8	cmp cs:ilosc_pomalowanych, 1000 ; 1000 
+					pikseli to wszystkie piksele, ktore pow
+					innismy narysowac 
+     125 0144  0F 82 0097 R		jb ptl 
+     126 0148				koniec: 
+     127 0148  2E: C7 06 0088 R 0000	mov cs:ilosc_pomalowanych, 0 ; przygoto
+					wanie do kolejnego rysowania 
+     128 014F  59			pop cx 
+     129 0150  5B			pop bx 
+     130 0151  58			pop ax 
+     131 0152  C3			ret 
+     132 0153				maluj ENDP 
+     133 0153				zacznij: 
+     134 0153  B0 00			mov al, 0 
+     135 0155  B4 05			mov ah, 5 
+     136 0157  CD 0A			int 10 
+     137 0159  B8 0000			mov ax, 0 
+     138 015C  8E D8			mov ds,ax 
+     139 015E  66| A1 0020		mov eax,ds:[32] 
+     140 0162  2E: 66| A3 0081 R	mov cs:wektor8, eax 
+     141 0167  B8 ---- R		mov ax, SEG obsluga_zegara 
+     142 016A  BB 0021 R		mov bx, OFFSET obsluga_zegara 
+     143 016D  FA			cli 
+     144 016E  89 1E 0020		mov ds:[32], bx 
+     145 0172  A3 0022			mov ds:[34], ax 
+     146 0175  FB			sti 
+     147 0176  E8 0000 R		call clear_screen 
+     148 0179  E8 008A R		call maluj 
+     149 017C				aktywne_oczekiwanie: 
+     150 017C  B4 01			mov ah,1 
+     151 017E  CD 16			int 16H 
+     152 0180  74 FA			jz aktywne_oczekiwanie 
+Microsoft (R) Macro Assembler Version 5.00                  12/10/24 21:15:47
+                                                             Page     1-4
+
+
+     153 0182  B4 00			mov ah, 0 
+     154 0184  CD 16			int 16H 
+     155 0186  E4 60			in al, 60h 
+     156				; Ustawienie zmiennej klawisz 
+     157 0188  3C 4B			cmp al, 75 
+     158 018A  0F 84 01A3 R		je USTAW_LEWO 
+     159 018E  3C 48			cmp al, 72 
+     160 0190  0F 84 01CF R		je USTAW_GORA 
+     161 0194  3C 50			cmp al, 80 
+     162 0196  0F 84 01E5 R		je USTAW_DOL 
+     163 019A  3C 4D			cmp al, 77 
+     164 019C  0F 84 01B9 R		je USTAW_PRAWO 
+     165 01A0  EB 59 90			jmp DALEJ 
+     166 01A3				USTAW_LEWO: 
+     167 01A3  2E: C6 06 0085 R 00	mov cs:klawisz, byte ptr 0 
+     168 01A9  2E: C7 06 007E R 0000	mov cs:licznik, byte ptr 0 
+     169 01B0  E8 0000 R		call clear_screen 
+     170 01B3  E8 008A R		call maluj 
+     171 01B6  EB 43 90			jmp DALEJ 
+     172 01B9				USTAW_PRAWO: 
+     173 01B9  2E: C6 06 0085 R 01	mov cs:klawisz, byte ptr 1 
+     174 01BF  2E: C7 06 007E R 0050	mov cs:licznik, byte ptr 80 
+     175 01C6  E8 0000 R		call clear_screen 
+     176 01C9  E8 008A R		call maluj 
+     177 01CC  EB 2D 90			jmp DALEJ 
+     178 01CF				USTAW_GORA: 
+     179 01CF  2E: C6 06 0085 R 02	mov cs:klawisz, byte ptr 2 
+     180 01D5  2E: C7 06 007E R 0000	mov cs:licznik, byte ptr 0 
+     181 01DC  E8 0000 R		call clear_screen 
+     182 01DF  E8 008A R		call maluj 
+     183 01E2  EB 17 90			jmp DALEJ 
+     184 01E5				USTAW_DOL: 
+     185 01E5  2E: C6 06 0085 R 03	mov cs:klawisz, byte ptr 3 
+     186 01EB  2E: C7 06 007E R 07D0	mov cs:licznik, byte ptr 2000 
+     187 01F2  E8 0000 R		call clear_screen 
+     188 01F5  E8 008A R		call maluj 
+     189 01F8  EB 01 90			jmp DALEJ 
+     190 01FB				DALEJ: 
+     191 01FB  80 FC 01			cmp ah, 1 ; ESC 
+     192 01FE  0F 85 017C R		jne aktywne_oczekiwanie 
+     193 0202  2E: 66| A1 0081 R	mov eax, cs:wektor8 
+     194 0207  FA			cli 
+     195 0208  66| A3 0020		mov ds:[32], eax 
+     196 020C  FB			sti 
+     197 020D  B0 00			mov al, 0 
+     198 020F  B4 4C			mov ah, 4CH 
+     199 0211  CD 21			int 21H 
+     200 0213				rozkazy ENDS 
+     201 0000				nasz_stos SEGMENT stack 
+     202 0000  0080[			db 128 dup (?) 
+     203	    ??			
+     204			 ]	
+     205				
+     206 0080				nasz_stos ENDS 
+Microsoft (R) Macro Assembler Version 5.00                  12/10/24 21:15:47
+                                                             Page     1-5
+
+
+     207				END zacznij 
+Microsoft (R) Macro Assembler Version 5.00                  12/10/24 21:15:47
+                                                             Symbols-1
+
+
+
+
+                N a m e         	Size	Length	 Align	Combine Class
+
+NASZ_STOS  . . . . . . . . . . .  	32 Bit	0080	PARA	STACK	
+ROZKAZY  . . . . . . . . . . . .  	16 Bit	0213	PARA	NONE	
+
+Symbols:            
+
+                N a m e         	Type	 Value	 Attr
+
+AKTYWNE_OCZEKIWANIE  . . . . . .  	L NEAR	017C	ROZKAZY
+
+CLEAR_SCREEN . . . . . . . . . .  	N PROC	0000	ROZKAZY	Length = 0021
+CZAS . . . . . . . . . . . . . .  	L WORD	0086	ROZKAZY
+CZERWONY . . . . . . . . . . . .  	L NEAR	00B9	ROZKAZY
+CZERWONY1  . . . . . . . . . . .  	L NEAR	0050	ROZKAZY
+
+DALEJ  . . . . . . . . . . . . .  	L NEAR	01FB	ROZKAZY
+DALEJ_RYSUJ  . . . . . . . . . .  	L NEAR	0138	ROZKAZY
+DALSZA_CZESC . . . . . . . . . .  	L NEAR	00D1	ROZKAZY
+DOL  . . . . . . . . . . . . . .  	L NEAR	012E	ROZKAZY
+
+GORA . . . . . . . . . . . . . .  	L NEAR	0124	ROZKAZY
+
+ILOSC_POMALOWANYCH . . . . . . .  	L WORD	0088	ROZKAZY
+
+KLAWISZ  . . . . . . . . . . . .  	L BYTE	0085	ROZKAZY
+KOLOR  . . . . . . . . . . . . .  	L BYTE	0080	ROZKAZY
+KONIEC . . . . . . . . . . . . .  	L NEAR	0148	ROZKAZY
+KONIEC_ZEGAR . . . . . . . . . .  	L NEAR	0073	ROZKAZY
+
+LEWO . . . . . . . . . . . . . .  	L NEAR	00F0	ROZKAZY
+LICZNIK  . . . . . . . . . . . .  	L WORD	007E	ROZKAZY
+
+MALUJ  . . . . . . . . . . . . .  	N PROC	008A	ROZKAZY	Length = 00C9
+
+NIEBIESKI  . . . . . . . . . . .  	L NEAR	00C9	ROZKAZY
+NIEBIESKI1 . . . . . . . . . . .  	L NEAR	0066	ROZKAZY
+
+OBSLUGA_ZEGARA . . . . . . . . .  	N PROC	0021	ROZKAZY	Length = 0069
+
+PRAWO  . . . . . . . . . . . . .  	L NEAR	010A	ROZKAZY
+PTL  . . . . . . . . . . . . . .  	L NEAR	0097	ROZKAZY
+PTL2 . . . . . . . . . . . . . .  	L NEAR	000B	ROZKAZY
+
+USTAW_DOL  . . . . . . . . . . .  	L NEAR	01E5	ROZKAZY
+USTAW_GORA . . . . . . . . . . .  	L NEAR	01CF	ROZKAZY
+USTAW_LEWO . . . . . . . . . . .  	L NEAR	01A3	ROZKAZY
+USTAW_PRAWO  . . . . . . . . . .  	L NEAR	01B9	ROZKAZY
+
+WEKTOR8  . . . . . . . . . . . .  	L DWORD	0081	ROZKAZY
+
+ZACZNIJ  . . . . . . . . . . . .  	L NEAR	0153	ROZKAZY
+Microsoft (R) Macro Assembler Version 5.00                  12/10/24 21:15:47
+                                                             Symbols-2
+
+
+ZIELONY  . . . . . . . . . . . .  	L NEAR	00C1	ROZKAZY
+ZIELONY1 . . . . . . . . . . . .  	L NEAR	005B	ROZKAZY
+
+@FILENAME  . . . . . . . . . . .  	TEXT  pack		
+
+
+    203 Source  Lines
+    203 Total   Lines
+     36 Symbols
+
+  50408 + 466136 Bytes symbol space free
+
+      1 Warning Errors
+      0 Severe  Errors

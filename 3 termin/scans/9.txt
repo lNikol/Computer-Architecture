@@ -1,0 +1,83 @@
+; Inicjalizacja rejestrów na podstawie numeru albumu 201302
+mov eax, 0          ; EAX = 0
+add eax, 2          ; Zwiększ EAX o ostatnią cyfrę albumu (2)
+
+mov edx, eax        ; Skopiuj EAX do EDX
+xor edx, edx        ; Wyzeruj EDX za pomocą XOR
+
+mov esi, 1          ; Wpisz trzecią cyfrę albumu (1) do ESI
+
+; Dodanie dwóch rejestrów (indeksy: 4%7=4 -> EBP i 0%7=0 -> EAX)
+mov ecx, ebp        ; ECX = EBP
+add ecx, eax        ; ECX = EBP + EAX
+
+; Mnożenie EBX przez 7
+lea ebx, [ebx*8 - ebx]  ; EBX = EBX * 7
+
+push ecx            ; Zapisz ECX na stosie
+
+; Warunek if (1 > 7)
+cmp esi, 7
+jg e1
+jmp e2
+e1:
+; Kod jeśli prawda
+e2:
+; Kod jeśli fałsz
+
+; Pętla zmniejszająca ECX
+loop_start:
+dec ecx
+jnz loop_start
+
+; Porównanie EAX z sumą dwóch ostatnich cyfr (0+2=2)
+cmp eax, 2
+jl less_than       ; Skok jeśli EAX < 2
+
+less_than:
+mov [ebp-4], edx   ; Zapisz EDX pod adresem [EBP-4]
+
+call CALCULATE     ; Wywołaj procedurę CALCULATE
+
+shr eax, 0         ; Przesuń EAX w prawo o 0 (piąta cyfra=0, modulo 4)
+
+xchg eax, ecx      ; Zamień EAX i ECX
+
+; Ustaw wartość 100 w rejestrze o indeksie 6 (EDI)
+mov edi, 100
+
+mov edi, ebx       ; Skopiuj EBX do EDI
+xor ecx, ecx       ; Wyzeruj ECX
+
+mov eax, 2         ; Suma pierwszej (2) i czwartej (0) cyfry = 2
+
+shl edx, 1         ; Przesuń EDX w lewo o 1 (trzecia cyfra=1, jeśli 0 to 1)
+
+sub ebx, 0         ; Odejmij od EBX 0 (piąta cyfra)
+
+push esi           ; Zapisz ESI na stosie
+pop esi            ; Przywróć ESI ze stosu
+
+; Instrukcja warunkowa JE
+cmp eax, ebx
+je FINISHED
+
+FINISHED:
+inc edi            ; Zwiększ EDI o 1
+dec ecx            ; Zmniejsz ECX o 1
+
+mov ebp, 2         ; Ustaw EBP na ostatnią cyfrę (2)
+
+and eax, 0xFF      ; Bitowe AND EAX z 0xFF
+or ebx, 0x01       ; Bitowe OR EBX z 0x01
+
+mov edx, 0         ; Wyzeruj EDX
+
+xchg eax, esi      ; Zamień EAX i ESI
+
+ret                ; Powrót z procedury
+
+; Usunięte instrukcje (3 losowe):
+; 1. xor edx, edx
+; 2. push ecx
+; 3. dec ecx

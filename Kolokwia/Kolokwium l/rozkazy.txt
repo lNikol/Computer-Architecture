@@ -1,0 +1,74 @@
+MOV|Move (copy), MOV Dest, Source; Dest:=Source, nie zmienia flag
+XCHG|Exchange, XCHG Op1, Op2; Op1:=Op2, Op2:=Op1, nie zmienia flag
+STC|Set Carry, STC; CF:=1, C:=1
+CLC|Clear Carry, CLC; CF:=0, C:=0
+CMC|Complement Carry, CMC; CF:=¬CF, C: (zmienia na przeciwny)
+STD|Set Direction, STD; DF:=1 (string op's downwards), D:=1
+CLD|Clear Direction, CLD; DF:=0 (string op's upwards), D:=0
+STI|Set Interrupt, STI; IF:=1, I:=1
+CLI|Clear Interrupt, CLI; IF:=0, I:=0
+PUSH|Push onto stack, PUSH Source; DEC SP, [SP]:=Source, nie zmienia flag
+PUSHF|Push flags, PUSHF; O, D, I, T, S, Z, A, P, C zapamiętane na stosie
+PUSHA|Push all general registers, PUSHA; AX, CX, DX, BX, SP, BP, SI, DI na stosie, nie zmienia flag
+POP|Pop from stack, POP Dest; Dest:=[SP], INC SP, nie zmienia flag
+POPF|Pop flags, POPF; Przywraca O, D, I, T, S, Z, A, P, C ze stosu, zmienia wszystkie flagi
+POPA|Pop all general registers, POPA; Przywraca DI, SI, BP, SP, BX, DX, CX, AX, nie zmienia flag
+CBW|Convert byte to word, CBW; AX:=AL (signed), nie zmienia flag
+CWD|Convert word to double, CWD; DX:AX:=AX (signed), O, S, Z, A, P, C: (status operacji)
+CWDE|Convert word to extended double, CWDE; EAX:=AX (signed), O, S, Z, A, P, C: (status operacji)
+IN|Input, IN Dest, Port; AL/AX/EAX:=byte/word/double from port, nie zmienia flag
+OUT|Output, OUT Port, Source; Byte/word/double of Source to port, nie zmienia flag
+ADD|Add, ADD Dest, Source; Dest:=Dest+Source, O (+-), S (+-), Z (+-), A (+-), P (+-), C (+-)
+ADC|Add with Carry, ADC Dest, Source; Dest:=Dest+Source+CF, O (+-), S (+-), Z (+-), A (+-), P (+-), C (+-)
+SUB|Subtract, SUB Dest, Source; Dest:=Dest-Source, O (+-), S (+-), Z (+-), A (+-), P (+-), C (+-)
+SBB|Subtract with Borrow, SBB Dest, Source; Dest:=Dest-(Source+CF), O (+-), S (+-), Z (+-), A (+-), P (+-), C (+-)
+DIV|Divide (unsigned), DIV Op; zależne od wielkości operacji: AL, AX, DX:AX:=dzielenie, O, D, I, T, S, Z, A, P, C: (nieokreślony status)
+IDIV|Signed Integer Divide, IDIV Op; jak DIV, ale z obsługą znaków, O, D, I, T, S, Z, A, P, C: (nieokreślony status)
+MUL|Multiply (unsigned), MUL Op; Wynik w AX, DX:AX lub EDX:EAX (zależne od operandów), O (0 lub 1), C (0 lub 1)
+IMUL|Signed Integer Multiply, IMUL Op; Jak MUL, ale dla liczb ze znakiem, O (0 lub 1), C (0 lub 1)
+INC|Increment, INC Op; Op:=Op+1, O (+-), S (+-), Z (+-), A (+-), P (+-), nie zmienia C
+DEC|Decrement, DEC Op; Op:=Op-1, O (+-), S (+-), Z (+-), A (+-), P (+-), nie zmienia C
+CMP|Compare, CMP Op1, Op2; Op1-Op2 (porównanie), O (+-), S (+-), Z (+-), A (+-), P (+-), C (+-)
+SAL|Shift Arithmetic Left, SAL Op, Quantity; Bit przesuwany w lewo, O (+-), S (+-), Z (+-), A (+-), P (+-), C (+-)
+SAR|Shift Arithmetic Right, SAR Op, Quantity; Bit przesuwany w prawo, O (+-), S (+-), Z (+-), A (+-), P (+-), C (+-)
+ROL|Rotate Left, ROL Op, Quantity; Rotacja w lewo, C:=najwyższy bit, nie zmienia innych flag
+ROR|Rotate Right, ROR Op, Quantity; Rotacja w prawo, C:=najniższy bit, nie zmienia innych flag
+NEG|Negate (two-complement), NEG Op; Op:=0-Op, C:=1 jeśli niezerowe, inaczej C:=0, O (+-), S (+-), Z (+-), A (+-), P (+-)
+NOT|Invert Each Bit, NOT Op; Op:=¬Op, nie zmienia flag
+AND|Logical AND, AND Dest, Source; Dest:=Dest∧Source, Z (+-), S (+-), P (+-), C:=0, O:=0
+OR|Logical OR, OR Dest, Source; Dest:=Dest∨Source, Z (+-), S (+-), P (+-), C:=0, O:=0
+XOR|Logical Exclusive OR, XOR Dest, Source; Dest:=Dest⊕Source, Z (+-), S (+-), P (+-), C:=0, O:=0
+NOP|No Operation, NOP; brak operacji, nie zmienia flag
+
+JE|Jump if Equal, JE Dest (≡ JZ); Skok, jeśli Z=1, nie zmienia flag
+JNE|Jump if Not Equal, JNE Dest (≡ JNZ); Skok, jeśli Z=0, nie zmienia flag
+JA|Jump if Above, JA Dest (≡ JNBE); Skok, jeśli CF=0 i Z=0, nie zmienia flag
+JAE|Jump if Above or Equal, JAE Dest (≡ JNB ≡ JNC); Skok, jeśli CF=0, nie zmienia flag
+JB|Jump if Below, JB Dest (≡ JNAE ≡ JC); Skok, jeśli CF=1, nie zmienia flag
+JBE|Jump if Below or Equal, JBE Dest (≡ JNA); Skok, jeśli CF=1 lub Z=1, nie zmienia flag
+JG|Jump if Greater, JG Dest (≡ JNLE); Skok, jeśli Z=0 i S=O, nie zmienia flag
+JGE|Jump if Greater or Equal, JGE Dest (≡ JNL); Skok, jeśli S=O, nie zmienia flag
+JL|Jump if Less, JL Dest (≡ JNGE); Skok, jeśli S≠O, nie zmienia flag
+JLE|Jump if Less or Equal, JLE Dest (≡ JNG); Skok, jeśli Z=1 lub S≠O, nie zmienia flag
+JO|Jump if Overflow, JO Dest; Skok, jeśli O=1, nie zmienia flag
+JNO|Jump if No Overflow, JNO Dest; Skok, jeśli O=0, nie zmienia flag
+JS|Jump if Sign, JS Dest; Skok, jeśli S=1, nie zmienia flag
+JNS|Jump if No Sign, JNS Dest; Skok, jeśli S=0, nie zmienia flag
+JCXZ|Jump if CX Zero, JCXZ Dest; Skok, jeśli CX=0, nie zmienia flag
+JECXZ|Jump if ECX Zero, JECXZ Dest; Skok, jeśli ECX=0, nie zmienia flag
+
+
+
+O (Overflow):  Wynik operacji ze znakiem jest zbyt duży lub zbyt mały. 1 = przepełnienie/uderflow
+D (Direction): Kierunek operacji na ciągach (1 = w dół, 0 = w górę).
+I (Interrupt): Czy przerwania są dozwolone (1 = włączone).
+S (Sign): Znak wyniku operacji (1 = wynik ujemny, 0 = wynik dodatni).
+Z (Zero): Wynik operacji to zero (1 = zero, 0 = różne od zera).
+A (Auxiliary Carry): Flaga przeniesienia pomocniczego,  wykorzystywana w operacjach arytmetycznych do wykrywania przeniesienia między niższym a wyższym nibble (4 bity) w bajcie.  1 = wystąpiło przeniesienie,  0 = brak przeniesienia. przeniesienie pomocnicze w dolnym nibble (używane w operacjach BCD)
+P (Parity): Parzystość bitów wyniku. 1 = wynik ma parzystą liczbę ustawionych bitów, 0 = nieparzystą.
+C (Carry): Wynik operacji arytmetycznej jest zbyt duży, by zmieścić się w docelowym rejestrze (dla operacji unsigned) lub nastąpiło przeniesienie/pożyczka. 1 = przeniesienie/pożyczka, 0 = brak.
+C: Carry - przeniesienie lub pożyczka w wyniku operacji arytmetycznych. 1 oznacza wystąpienie przeniesienia/pożyczki.
+
+
+O: Overflow - wynik operacji przekroczył zakres liczbowy (np. przepełnienie znaku). 1 oznacza przepełnienie. D: Direction - kierunek operacji przy przetwarzaniu ciągów. 1 oznacza od końca (malejące adresy). I: Interrupt - określa możliwość wystąpienia przerwań. 1 oznacza, że przerwania są włączone. T: Trap - tryb krokowy do debugowania. 1 oznacza aktywny tryb krokowy. S: Sign - określa znak wyniku. 1 oznacza wynik ujemny, 0 dodatni. Z: Zero - wskazuje, czy wynik operacji wynosi 0. 1 oznacza wynik równy 0. A: Aux. carry - przeniesienie pomocnicze w dolnym nibble (używane w operacjach BCD). P: Parity - parzystość bitów wyniku. 1 oznacza parzystą liczbę bitów ustawionych na 1. 
+

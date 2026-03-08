@@ -1,0 +1,41 @@
+.686
+.model flat
+
+public _numerPartycjiAktywnej
+
+.code
+_numerPartycjiAktywnej PROC
+    push ebp
+    mov ebp, esp
+    push esi
+    push edi
+
+    mov esi, [ebp+8]
+    add esi, 1BEh
+
+    mov edi, 0
+    mov ecx, 4
+
+check_partition:
+    cmp byte ptr [esi], 80h
+    je found_active
+
+    add esi, 16
+    inc edi
+    loop check_partition
+
+    mov eax, -1
+    jmp epilog
+
+found_active:
+    mov eax, edi
+
+epilog:
+    pop edi
+    pop esi
+    mov esp, ebp
+    pop ebp
+    ret
+_numerPartycjiAktywnej ENDP
+
+END

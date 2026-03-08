@@ -1,4 +1,4 @@
-.686
+ï»¿.686
 .model flat
 
 
@@ -8,10 +8,10 @@ extern _MessageBoxA@16 : proc
 
 
 Comment |
-W 48-bajtowej tablicy bufor znajduje sie tekst np. "Polaczenia kolejowo – autobusowe"
+W 48-bajtowej tablicy bufor znajduje sie tekst np. "Polaczenia kolejowo â€“ autobusowe"
 zakodowany w formacie UTF-8. W tekscie wystepuje takze symbole parowozu i autobusu. 
 Napisac program w asemblerze, ktory wyswietli ten tekst na ekranie w postaci komunikatu typu MessageBoxW. 
-W ponizszej tablicy wystêpuja ciagi UTF-8  1-, 2-, 3 i 4-bajtowe
+W ponizszej tablicy wystÐºpuja ciagi UTF-8  1-, 2-, 3 i 4-bajtowe
 | 
 
 .code
@@ -45,6 +45,7 @@ et:
 znak_wielobajtowy:
 	bt ax, 5
 	jb three_or_four_bytes; if CF = 1, 3 or 4 bytes
+	; znak 2 bajtowy
 	shl al, 3
 	shr al, 3 ; al = 000xxxxx
 	mov ah, al
@@ -60,6 +61,7 @@ znak_wielobajtowy:
 three_or_four_bytes:
 	bt ax, 4
 	jb four_bytes ; if CF = 1, 4 bytes
+	; znak 3 bajtowy
 	shl al, 4 ; al = xxxx0000
 	shr al, 4 ; al = 0000xxxx
 	mov bh, al ; bh = 0000xxxx

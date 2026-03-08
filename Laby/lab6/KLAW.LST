@@ -1,0 +1,200 @@
+Microsoft (R) Macro Assembler Version 5.00                  12/10/24 19:47:53
+                                                             Page     1-1
+
+
+       1				﻿; Program gwiazdki.asm 
+klaw.asm(1): warning A4001: Extra characters on line
+       2				; Wyświetlanie znaków * w takt przerw
+					ań zegarowych 
+       3				; Uruchomienie w trybie rzeczywistym pr
+					ocesora x86 
+       4				; lub na maszynie wirtualnej 
+       5				; zakończenie programu po naciśnięci
+					u klawisza 'x' 
+       6				; asemblacja (MASM 4.0): masm gwiazdki.
+					asm,,,; 
+       7				; konsolidacja (LINK 3.60): link gwiazd
+					ki.obj; 
+       8				.386 
+       9 0000				rozkazy SEGMENT use16 
+      10				ASSUME CS:rozkazy 
+      11				; podprogram 'wyswietl_AL' wyświetla z
+					awartość rejestru AL 
+      12				; w postaci liczby dziesiętnej bez zna
+					ku 
+      13 0000				wyswietl_AL PROC 
+      14					; wyświetlanie zawartości rej
+					estru AL na ekranie wg adresu 
+      15					; podanego w ES:BX 
+      16					; stosowany jest bezpośredni z
+					apis do pamięci ekranu 
+      17					; przechowanie rejestrów 
+      18 0000  50				push ax 
+      19 0001  51				push cx 
+      20 0002  52				push dx 
+      21 0003  B1 0A				mov cl, 10 ; dzielnik 
+      22 0005  B4 00				mov ah, 0 ; zerowanie starszej 
+					części dzielnej 
+      23					; dzielenie liczby w AX przez l
+					iczbę w CL, iloraz w AL, 
+      24					; reszta w AH (tu: dzielenie pr
+					zez 10) 
+      25 0007  F6 F1				div cl 
+      26 0009  80 C4 30				add ah, 30H ; zamiana na kod AS
+					CII 
+      27 000C  26: 88 67 04			mov es:[bx+4], ah ; cyfra jedno
+					ści 
+      28 0010  B4 00				mov ah, 0 
+      29 0012  F6 F1				div cl ; drugie dzielenie przez
+					 10 
+      30 0014  80 C4 30				add ah, 30H ; zamiana na kod AS
+					CII 
+      31 0017  26: 88 67 02			mov es:[bx+2], ah ; cyfra dzies
+					iątek 
+      32 001B  04 30				add al, 30H ; zamiana na kod AS
+					CII 
+      33 001D  26: 88 07			mov es:[bx+0], al ; cyfra setek
+					 
+      34					; wpisanie kodu koloru (intensy
+Microsoft (R) Macro Assembler Version 5.00                  12/10/24 19:47:53
+                                                             Page     1-2
+
+
+					wny biały) do pamięci ekranu 
+      35 0020  B0 0F				mov al, 00001111B 
+      36 0022  26: 88 47 01			mov es:[bx+1],al 
+      37 0026  26: 88 47 03			mov es:[bx+3],al 
+      38 002A  26: 88 47 05			mov es:[bx+5],al 
+      39					; odtworzenie rejestrów 
+      40 002E  5A				pop dx 
+      41 002F  59				pop cx 
+      42 0030  58				pop ax 
+      43 0031  C3				ret ; wyjście z podprogramu 
+      44 0032				wyswietl_AL ENDP 
+      45				 
+      46				 
+      47 0032				obsluga_klawiatury PROC 
+      48					; przechowanie uzywanych rejest
+					row 
+      49 0032  50				push ax 
+      50 0033  53				push bx 
+      51 0034  06				push es 
+      52					; wpisanie adresu pamieci ekran
+					u do rejestru ES 
+      53					; pamiec ekranu dla trybu tekst
+					owego zaczyna sie od adresu B8000H 
+      54					; jednak do rejestru ES wpisuje
+					my wartosc B800H bo w trakcie obliczeni
+					a adresu procesor 
+      55					; kazdorazowo mnozy zawartosc r
+					ejestru ES przez 16 
+      56 0035  B8 B800				mov ax, 0B800h 
+      57 0038  8E C0				mov es, ax 
+      58 003A  BB 0000				mov bx, 0 
+      59 003D  E4 60				in al, 60h 
+      60 003F  E8 0000 R			call wyswietl_AL 
+      61 0042  07				pop es 
+      62 0043  5B				pop bx 
+      63 0044  58				pop ax 
+      64 0045  2E: FF 2E 004A R			jmp dword ptr cs:wektor9 
+      65 004A  ????????				wektor9 dd ? 
+      66 004E				obsluga_klawiatury ENDP 
+      67				 
+      68				 
+      69				;======================================
+					====================== 
+      70				; program główny - instalacja i deins
+					talacja procedury 
+      71				; obsługi przerwań 
+      72				; ustalenie strony nr 0 dla trybu tekst
+					owego 
+      73				; ustalenie strony nr 0 dla trybu tekst
+					owego 
+      74 004E					zacznij: 
+      75 004E  B0 00				mov al, 0 
+      76 0050  B4 05				mov ah, 5 
+      77 0052  CD 0A				int 10 
+Microsoft (R) Macro Assembler Version 5.00                  12/10/24 19:47:53
+                                                             Page     1-3
+
+
+      78 0054  B8 0000				mov ax, 0 
+      79 0057  8E D8				mov ds, ax 
+      80					; odczytanie zawartosci wektora
+					 nr 9 i zapisanie go w zmiennej wektor9
+					 
+      81 0059  66| A1 0024			mov eax, ds:[36] ; adres fizycz
+					ny 2*16+4 = 36 
+      82 005D  2E: 66| A3 004A R		mov cs:wektor9, eax 
+      83					; wpisanie do wektora nr 9 adre
+					su procedury 'obsluga_klawiatury' 
+      84 0062  B8 ---- R			mov ax, SEG obsluga_klawiatury 
+      85 0065  BB 0032 R			mov bx, offset obsluga_klawiatu
+					ry 
+      86 0068  FA				cli ; zablokowanie przerwan 
+      87 0069  89 1E 0024			mov ds:[36], bx 
+      88 006D  A3 0026				mov ds:[38], ax 
+      89 0070  FB				sti ; odblokowanie przerwan 
+      90 0071					aktywne: 
+      91 0071  B4 01				mov ah, 1 
+      92 0073  CD 16				int 16h 
+      93 0075  74 FA				jz aktywne 
+      94 0077  B4 00				mov ah, 0 
+      95 0079  CD 16				int 16h 
+      96 007B  80 FC 01				cmp ah, 1 ; scan code ESC 
+      97 007E  75 F1				jne aktywne 
+      98					; deinstalacja procedury obslug
+					i przerwania zegarowego 
+      99 0080  2E: 66| A1 004A R		mov eax, cs:wektor9 
+     100 0085  FA				cli 
+     101 0086  66| A3 0024			mov ds:[36], eax 
+     102 008A  FB				sti 
+     103					; zakonczenie programu 
+     104 008B  B0 00				mov al, 0 
+     105 008D  B4 4C				mov ah, 4Ch 
+     106 008F  CD 21				int 21h 
+     107				 
+     108 0091				rozkazy ENDS 
+     109				 
+     110 0000				nasz_stos SEGMENT stack 
+     111 0000  0080[				db 128 dup (?) 
+     112	    ??			
+     113			 ]	
+     114				
+     115 0080				nasz_stos ENDS 
+     116				END zacznij 
+Microsoft (R) Macro Assembler Version 5.00                  12/10/24 19:47:53
+                                                             Symbols-1
+
+
+
+
+                N a m e         	Size	Length	 Align	Combine Class
+
+NASZ_STOS  . . . . . . . . . . .  	32 Bit	0080	PARA	STACK	
+ROZKAZY  . . . . . . . . . . . .  	16 Bit	0091	PARA	NONE	
+
+Symbols:            
+
+                N a m e         	Type	 Value	 Attr
+
+AKTYWNE  . . . . . . . . . . . .  	L NEAR	0071	ROZKAZY
+
+OBSLUGA_KLAWIATURY . . . . . . .  	N PROC	0032	ROZKAZY	Length = 001C
+
+WEKTOR9  . . . . . . . . . . . .  	L DWORD	004A	ROZKAZY
+WYSWIETL_AL  . . . . . . . . . .  	N PROC	0000	ROZKAZY	Length = 0032
+
+ZACZNIJ  . . . . . . . . . . . .  	L NEAR	004E	ROZKAZY
+
+@FILENAME  . . . . . . . . . . .  	TEXT  klaw		
+
+
+    113 Source  Lines
+    113 Total   Lines
+      9 Symbols
+
+  50484 + 466060 Bytes symbol space free
+
+      1 Warning Errors
+      0 Severe  Errors

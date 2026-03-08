@@ -1,0 +1,201 @@
+.686
+.model flat
+public _get_RPK
+
+extern _mul_24@8 
+
+.code
+char_to_value PROC
+    cmp al, 'B'
+    jne check_C
+    mov al, 0
+    ret
+check_C:
+    cmp al, 'C'
+    jne check_D
+    mov al, 1
+    ret
+check_D:
+    cmp al, 'D'
+    jne check_F
+    mov al, 2
+    ret
+check_F:
+    cmp al, 'F'
+    jne check_G
+    mov al, 3
+    ret
+check_G:
+    cmp al, 'G'
+    jne check_H
+    mov al, 4
+    ret
+check_H:
+    cmp al, 'H'
+    jne check_J
+    mov al, 5
+    ret
+check_J:
+    cmp al, 'J'
+    jne check_K
+    mov al, 6
+    ret
+check_K:
+    cmp al, 'K'
+    jne check_M
+    mov al, 7
+    ret
+check_M:
+    cmp al, 'M'
+    jne check_P
+    mov al, 8
+    ret
+check_P:
+    cmp al, 'P'
+    jne check_Q
+    mov al, 9
+    ret
+check_Q:
+    cmp al, 'Q'
+    jne check_R
+    mov al, 10
+    ret
+check_R:
+    cmp al, 'R'
+    jne check_T
+    mov al, 11
+    ret
+check_T:
+    cmp al, 'T'
+    jne check_V
+    mov al, 12
+    ret
+check_V:
+    cmp al, 'V'
+    jne check_W
+    mov al, 13
+    ret
+check_W:
+    cmp al, 'W'
+    jne check_X
+    mov al, 14
+    ret
+check_X:
+    cmp al, 'X'
+    jne check_Y
+    mov al, 15
+    ret
+check_Y:
+    cmp al, 'Y'
+    jne check_2
+    mov al, 16
+    ret
+check_2:
+    cmp al, '2'
+    jne check_3
+    mov al, 17
+    ret
+check_3:
+    cmp al, '3'
+    jne check_4
+    mov al, 18
+    ret
+check_4:
+    cmp al, '4'
+    jne check_6
+    mov al, 19
+    ret
+check_6:
+    cmp al, '6'
+    jne check_7
+    mov al, 20
+    ret
+check_7:
+    cmp al, '7'
+    jne check_8
+    mov al, 21
+    ret
+check_8:
+    cmp al, '8'
+    jne check_9
+    mov al, 22
+    ret
+check_9:
+    cmp al, '9'
+    jne invalid_char
+    mov al, 23
+    ret
+invalid_char:
+    mov al, 0
+    ret
+char_to_value ENDP
+
+_get_RPK PROC
+    push ebp
+    mov ebp, esp
+    push ebx
+    push esi
+    push edi
+    
+    sub esp, 15
+    mov edi, esp
+    xor eax, eax
+    mov ecx, 15
+    rep stosb
+    mov edi, esp  ; reset edi
+
+    mov esi, [ebp+8]      
+    add esi, 6
+    
+    mov ecx, 4  
+
+process_group:
+    push ecx
+    
+    mov ecx, 5
+process_char:
+    mov al, [esi]
+    inc esi
+    
+    call char_to_value
+    
+    push esi
+    push edi
+    push edi  ; in
+    push edi  ; out
+    call _mul_24@8
+    pop edi
+    pop esi
+    
+    movzx eax, al
+    add [edi], al
+    
+    mov ebx, 1  ; Start from [edi+1]
+carry_loop:
+    adc byte ptr [edi+ebx], 0
+    inc ebx
+    cmp ebx, 14  ; Process bytes 1-14 (15 total)
+    jbe carry_loop
+    
+    loop process_char
+    
+    pop ecx
+    cmp ecx, 1
+    je no_hyphen
+    inc esi  ; skip '-'
+no_hyphen:
+    loop process_group
+    
+    mov eax, [edi+8]  
+    bswap eax             
+
+
+    add esp, 15
+    pop edi
+    pop esi
+    pop ebx
+    pop ebp
+    ret
+_get_RPK ENDP
+
+END

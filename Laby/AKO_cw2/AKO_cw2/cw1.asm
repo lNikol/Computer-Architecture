@@ -1,21 +1,35 @@
 .686
 .model flat
 extern _ExitProcess@4 : PROC
-extern __write : PROC
-public _main
-.data
-tekst db 10, 'Nazywam sie . . . ' , 10
-db 'Moj pierwszy 32-bitowy program '
-db 'asemblerowy dziala juz poprawnie!', 10
 .code
+_dodaj PROC
+	mov esi, [esp]
+	mov eax, [esi]
+	add eax, [esi+4]
+	add byte ptr [esp], 8
+	ret
+_dodaj ENDP
+
+
+
 _main PROC
+
+
+mov eax, 10
+
+mov ebx, eax
+
+
+
+call _dodaj
+dd 5
+dd 7
+jmp ciag_dalszy
+
+ciag_dalszy:
 mov ecx, 85 
-push ecx 
-push dword PTR OFFSET tekst 
-push dword PTR 1 
-call __write 
-add esp, 12 
-push dword PTR 0 
+push 0
 call _ExitProcess@4
+
 _main ENDP
-END
+END _main

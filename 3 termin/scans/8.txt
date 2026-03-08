@@ -1,0 +1,35 @@
+.686
+.model flat
+public _find_in_last
+
+.code
+_find_in_last PROC
+    push ebp
+    mov ebp, esp
+    push esi
+
+    mov esi, [ebp+8]  ; ESI = tablica last
+    mov ax, [ebp+12]  ; AX = znak do znalezienia
+
+search_loop:
+    cmp word ptr [esi], 0
+    je not_found      ; Koniec tablicy
+    cmp [esi], ax
+    je found
+    add esi, 4        ; Przejdź do następnego elementu
+    jmp search_loop
+
+found:
+    movzx eax, word ptr [esi+2] ; Pobierz indeks
+    jmp end_search
+
+not_found:
+    mov eax, -1       ; Zwróć -1 jeśli znak nie został znaleziony
+
+end_search:
+    pop esi
+    pop ebp
+    ret
+_find_in_last ENDP
+
+END

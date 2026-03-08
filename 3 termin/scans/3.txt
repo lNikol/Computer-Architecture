@@ -1,0 +1,50 @@
+.686
+.model flat
+
+public _shl_128
+
+.code
+_shl_128 PROC
+    push ebp
+    mov ebp, esp
+    push ebx
+    push esi
+    push edi
+
+    mov esi, [ebp+8]
+    mov cl, [ebp+12]
+    and cl, 7Fh
+
+    cmp cl, 0
+    je koniec
+
+    mov edx, 32
+    sub edx, ecx
+
+    mov eax, [esi]
+    mov ebx, [esi+4]
+    mov edi, [esi+8]
+    mov ebp, [esi+12]
+
+petla:
+    shl eax, 1
+    rcl ebx, 1
+    rcl edi, 1
+    rcl ebp, 1
+    dec cl
+    jnz petla
+
+    mov [esi], eax
+    mov [esi+4], ebx
+    mov [esi+8], edi
+    mov [esi+12], ebp
+
+koniec:
+    pop edi
+    pop esi
+    pop ebx
+    pop ebp
+    ret
+_shl_128 ENDP
+
+END

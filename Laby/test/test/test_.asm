@@ -1,89 +1,202 @@
 .686
 .model flat
+extern _malloc : PROC
+extern _MessageBoxA@16 : PROC
+extern _ExitProcess@4 : PROC
+public _moving_avg
 
-
-extern  _ExitProcess@4 : proc
-extern _MessageBoxW@16 : proc
-extern _MessageBoxA@16 : proc
-
-.code
-_main PROC	
-	
-
-	push  4   ; utype
-	push OFFSET tytul
-	push OFFSET tekst
-	push  0 ; hwnd
-	call _MessageBoxA@16
-	
-	mov ah,0  ; mov ax,0
-	mov ecx,16
-	mov esi,0
-	mov edi,0
-; konwersja podstawowych znakow ACSII -> utf-16
-et:    
-	mov al,bufor[esi]	   ; odczyt pierwszego bajtu znaku utf-8
-	add esi,1
-	;mov byte ptr bufor[0],al
-	;mov byte bufor[1],0
-	cmp al,7fh
-	ja  znak_wielobajtowy
-	
-	mov ah,0  ; mov ax,0
-	mov output[edi],ax
-	add edi,2
-
-
-
-znak_wielobajtowy:
-	
-	loop et
-
-
-	push  4   ; utype
-	push OFFSET tytulW
-	push OFFSET output
-	push  0 ; hwnd
-	call _MessageBoxW@16
-
-
-	push 0  ; exit code
-	call _ExitProcess@4
-_main ENDP
-
-  
 .data
-tekst db "Czy lubisz AKO?",0
+offset_wektora db 2 dup (?)
+dana dw 'ab','cd','ef'
 
-bufor2 dw 16 dup (?)
+pamiec dd 12345678h
+napis db 'informatyka', 0, 4 dup (?)
+
+linie dd 421, 422, 443
+  dd 442, 444, 427, 432
+.code
+
+public _szukaj_elem_min
+; int * szukaj_elem_min (int tablica[], int n)
+; zwrocic adres najmniejszego elementu tablicy
+; tablica = [3,2,1,4,5];
+; ecx - tablica, eax - n
+.code
+_szukaj_elem_min proc
+    push edx
+    push ebx
+    push esi
+    
+    mov ebx, ecx ; ebx - tab[0]
+    mov ecx, 0
+
+    ; edx = max, nastepny element
+    ; edi = min, minimalny element
+    mov edi, ebx
+    ptl:
+        mov edx, [ebx + 4*ecx]
+        cmp edx, esi
+        jle zamien_min ; edx <= edi
+        
+        ; edi > edx
+
+        inc ecx
+        cmp ecx, eax
+        jne ptl
+
+    pop esi
+    pop ebx
+    pop edx
+    ret
+
+    zamien_min:
+    mov esi, edx
+    jmp ptl
+_szukaj_elem_min endp
 
 
-tytul db "Pytanie",0
-		dw 'P','y','t','a','n','i','e'
-zmA     db  'P',0,   'y',0,  't',0, 'a',0, 'n',0, 'i',0, 'e',0,  0,0
-tytulW 		dd  00790050h,0h
+_moving_avg proc
+
+; kod kolo2
 
 
-; bufor ze znakami wejsciowymi w utf-8
-bufor	db	50H, 6FH, 0C5H, 82H, 0C4H, 85H, 63H, 7AH, 65H, 6EH, 69H, 61H, 20H 
-		db	0F0H, 9FH, 9AH, 82H   ; parowoz
-		db	20H, 20H, 6BH, 6FH, 6CH, 65H, 6AH, 6FH, 77H, 6FH, 20H
-		db	0E2H, 80H, 93H ; pulpauza
-		db	20H, 61H, 75H, 74H, 6FH, 62H, 75H, 73H, 6FH, 77H, 65H, 20H, 20H
-		db	0F0H,  9FH,  9AH,  8CH ; autobus
-
-output  dw 48 dup (?)
-
-  db 'A'
-  db 41h
-  dw 'AB'  ; dw 4142h
 
 
-  db 90h
-  dw 90h
 
 
-  db 90h
-  db 123
 
-END
+
+
+
+mov edx, linie[2]
+
+mov edx, 0F0000000h
+mov ebx, 0E0000000h
+mov eax, 0D0000000h
+
+mov ecx, 32
+bt eax, 31
+ptlx:
+rcl ebx, 1
+rcl edx, 1
+rcl eax, 1
+loop ptlx
+
+
+
+
+mov ecx, 32
+shl eax, 1
+ptl1:
+rcl ebx, 1
+rcl edx, 1
+rcl eax, 1
+loop ptl1
+
+mov ecx, 32
+shl ebx, 1
+ptl2:
+rcl edx, 1
+rcl eax, 1
+rcl ebx, 1
+loop ptl2
+
+mov ecx, 32
+shl edx, 1
+ptl3:
+rcl eax, 1
+rcl ebx, 1
+rcl edx, 1
+loop ptl3
+
+   mov edx, offset pamiec
+mov ebx, pamiec ;zeby sprawdzic co tam jest ladnie
+mov ecx, 4
+ptl:
+mov al, byte ptr [edx+ecx-1]
+ror eax, 8 ; przemieszczenie bitow w kierunku od prawej do lewej, cyklicznie
+loop ptl
+    
+
+
+
+    cmp ebx, 0
+    ;jge koniec
+    not bl  
+    add bl, 1
+
+    push ebp
+    mov ebp, esp
+    push esi
+    push edi
+    push ebx
+
+    ; Argumenty funkcji:
+    ; table: [ebp+8]
+    ; k: [ebp+12]
+    ; m: [ebp+16]
+
+    ; Rozmiar wyjsciowej tablicy: k - m + 1 (w floatach)
+    mov eax, dword ptr [ebp+12]    
+    sub eax, dword ptr [ebp+16]    
+    add eax, 1                     ; eax = k - m + 1
+    test eax, eax                  ; czy rozmiar > 0
+    jle error_return               
+
+    ; Ilosc pamieci do alokacji: (k - m + 1) * sizeof(float)
+    push eax                       
+    shl eax, 2                     ; eax *= 4 (rozmiar float)
+    push eax                       
+    call _malloc                    
+    add esp, 4                     
+    test eax, eax                  
+    jz error_return                
+
+    ; eax zawiera wskaznik na zaalokowana pamiec
+    mov edi, eax                   ; edi = wskaznik na wyjsciowa tablice
+    pop ebx                        ; ebx = rozmiar wyjsciowej tablicy (k - m + 1)
+    push edi
+
+    ; Obliczanie srednich ruchomych
+    mov esi, dword ptr [ebp+8]     ; esi = wskaznik na tablice wejsciowa (table)
+    mov ecx, dword ptr [ebp+16]    ; ecx = m (rozmiar okna)
+
+main_loop:
+    fldz                           ; st(0) = 0 (inicjalizacja sumy)
+    xor eax, eax                   
+sum_loop:
+    fld qword ptr [esi + eax*8]    ; ladowanie table[eax]
+    faddp st(1), st(0)             
+    inc eax                        
+    cmp eax, ecx                   ; czy ptrzetworzono m elementow?
+    jl sum_loop                     
+
+    ; suma / m
+    fidiv dword ptr [ebp+16]       ; st(0) = suma / m
+
+    ; wynik w tablicy wyjsciowej
+    fstp dword ptr [edi]           ; wyjsciowa_tablica[i] = srednia
+    add edi, 4                     
+
+    add esi, 8                     ; wsk wejsc = (table + 1)
+    dec ebx                        
+    jnz main_loop                  
+
+    pop edi
+    ; zwracam wskaznik na tablice wyjsciowa
+    mov eax, edi
+    jmp clean_exit
+
+error_return:
+    xor eax, eax                   ; zwracam NULL
+
+clean_exit:
+    pop ebx
+    pop edi
+    pop esi
+    mov esp, ebp
+    pop ebp
+    ret
+_moving_avg endp
+
+end

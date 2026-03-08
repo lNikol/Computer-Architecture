@@ -1,0 +1,82 @@
+.686
+.model flat
+public _create_last
+
+extern _VirtualAlloc@16 ; Funkcja WinAPI
+
+.code
+_create_last PROC
+    push ebp
+    mov ebp, esp
+    push ebx
+    push esi
+    push edi
+
+    ; 1. Oblicz rozmiar tablicy (liczba unikalnych znaków w tekście + 1 dla terminatora)
+    mov esi, [ebp+8]  ; ESI = tekst
+    xor ecx, ecx      ; Licznik unikalnych znaków
+
+count_unique:
+    mov al, [esi]
+    test al, al
+    jz end_count
+    inc ecx
+    inc esi
+    jmp count_unique
+end_count:
+
+    ; 2. Zaalokuj pamięć (każdy element to 4 bajty: 2 bajty na znak, 2 bajty na indeks)
+    shl ecx, 2        ; ECX = liczba_unikalnych * 4
+    add ecx, 4        ; +4 dla terminatora (0)
+
+    push 0            ; flProtect = 0
+    push 0            ; flAllocationType = 0
+    push ecx          ; dwSize
+    push 0            ; lpAddress = NULL
+    call _VirtualAlloc@16
+    mov edi, eax      ; EDI = tablica last
+
+    ; 3. Wypełnij tablicę last
+    mov esi, [ebp+12] ; ESI = wzorzec
+    xor ebx, ebx      ; Indeks w wzorcu (0-based)
+
+fill_last:
+    mov al, [esi]
+    test al, al
+    jz end_fill
+
+    ; Sprawdź czy znak już jest w tablicy
+    mov ecx, edi
+check_existing:
+    cmp word ptr [ecx], 0
+    je add_new_entry
+    cmp al, [ecx]
+    je update_entry
+    add ecx, 4
+    jmp check_existing
+
+update_entry:
+    mov [ecx+2], bx   ; Aktualizuj indeks ostatniego wystąpienia
+    jmp next_char
+
+add_new_entry:
+    mov [ecx], al     ; Zapisz znak
+    mov [ecx+2], bx   ; Zapisz indeks
+
+next_char:
+    inc esi
+    inc ebx
+    jmp fill_last
+
+end_fill:
+    ; Dodaj terminator (0)
+    mov dword ptr [ecx+4], 0
+
+    mov eax, edi      ; Zwróć wskaźnik do tablicy
+
+    pop edi
+    pop esi
+    pop ebx
+    pop ebp
+    ret
+_create_last ENDP

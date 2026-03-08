@@ -1,0 +1,48 @@
+AKO szykowanie się do poprawki:
+
+Codziennie:
+- Anki 10-15 kartek ze zrozumieniem i na pamięć
+- Sprawdzić czy wszystkie pytania już w Anki (zwłaszcza konfiguracja F czy coś takiego, było na poprawce)
+- Sprawdzić wyłączone kartki z Anki
+- Robić 1-3 zadania z poprzednich kolokwiów, testów, egzaminów, 3 terminu, laborek, ćwiczeń
+- Co najmniej 4-5 godzin codziennie
+- Powtarzać poprzednie kartki anki co 2-3 dni, zgodnie ZRUPS
+- Raz w 2 dni na czas pisać jakieś zadanie na kartce (tablecie). Cel - pisać to tak, aby zostawało co najmniej 10% od całego czasu na zadanie
+- Jedno zadanie na kodowania tekstów i (lub) zamianę symboli w tych tekstach (praca z łańcuchami znaków)
+
+- STANDARDY przekazywania parametrow C, STDCALL itp.
+
+Pierwsze 4 dni:
+(tematy z ostatnich wykładów cały dzień na to)
++ flagi i warunki ich zmian (co się pushujemy na stos i czemu)
+- little/big endian
++ - zrobić podstawowy programy działań matematycznych w 16, 32 i 64 bitach (64bit zostaly)
++ jak wyżej, tylko na koprocesorze
+- przypomnieć o co chodziło na wykładach, zobaczyć notatki 
+- przypomnieć rodzaje pamięci RAM i inne ciężkie tematy z ostatnich wykładów
+- rodzaje adresowań i haczyki w każdym
+- specjalne komendy dla 16 i 64 bit, shadow space i stos
+- rozmiary danych wejściowych, kodu powrotu, zmiennych lokalnych na stosie
+- operacje z lea, pamięcią, macierzami. Dla macierzy zrobić kod for i zsumować elementy i coś jeszcze wymyśleć
+- (kodowanie) liczby zmiennoprzecinkowe 32,64,80 bit oraz działania matematyczne (mantysa + bias)
+- kodowanie tekstów wszystkie utf-y (16,32,64 bity itp.) oraz kodowanie i dekodowanie
+- kodowanie instrukcji (rozmiar komendy, operandów/liczb/danych oraz jakie rejestry r/m)
+- TEST i alternatywne komendy
+- jak działa symbol (do momentu użycia w linijce/na co wskazuje (chyba na blok pamięci do ostatniej komendy), np. jmp $+2) $ (licznik lokacji)
+- komenda movsX (B,W,D,Q)
+
+
+koprocesor: 
+- różny rozmiar danych (16,32,64 bit) i jak z tym pracować 
+- jakieś podstawowe zadania na koprocesor z laborek i egzaminów oraz ćwiczeń
+- powtórzyć co robią poszczególne specjalne komendy (shl, shr i inne których miałem użyć na poprawce) i zrobić mały kod, demonstrujący jak to działa (5-15 linijek)
+- wartości specjalne i jak się kodują
+- 
+
+
+
+Main goals:
+- Nauczyć się w całości obsługiwać łańcuchy znaków
+- Liczby zmiennoprzecinkowe
+- Operacja na danych różnych długościach (24 bity itp., na egzaminach było)
+- 

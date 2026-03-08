@@ -1,0 +1,105 @@
+.686
+.model flat
+public _search
+
+extern _create_last@8  ; Zadanie 7
+extern _find_in_last@8 ; Zadanie 8
+
+.code
+_search PROC
+    push ebp
+    mov ebp, esp
+    push ebx
+    push esi
+    push edi
+    push ecx
+    push edx
+
+    push [ebp+12]    
+    push [ebp+8]     
+    call _create_last@8
+    mov ebx, eax     
+
+
+    mov edi, [ebp+12] 
+    xor ecx, ecx
+    dec ecx
+    xor al, al
+    repne scasb      
+    not ecx
+    dec ecx          
+    mov edx, ecx     
+
+
+    mov esi, [ebp+8] 
+    xor eax, eax     
+
+search_loop:
+
+    mov edi, esi
+    add edi, edx     
+    cmp byte ptr [edi], 0
+    je not_found     
+
+    mov ecx, edx     
+    dec ecx          
+
+compare_loop:
+ 
+    movzx edi, byte ptr [esi + ecx]  
+    movzx esi, byte ptr [[ebp+12] + ecx] 
+
+
+    cmp edi, esi
+    jne mismatch
+
+
+    dec ecx
+    jns compare_loop  
+
+    jmp found
+
+mismatch:
+
+    push [esi + edx - 1]  
+    push ebx              
+    call _find_in_last@8  
+
+    mov ecx, edx     
+    sub ecx, eax     
+    cmp ecx, 1
+    jge shift_ok
+    mov ecx, 1       
+
+shift_ok:
+
+
+    add eax, ecx     
+    add esi, ecx     
+    jmp search_loop
+
+found:
+
+    mov eax, esi
+    sub eax, [ebp+8] 
+    inc eax          
+    jmp cleanup
+
+not_found:
+    mov eax, -1      
+
+cleanup:
+    
+    push ebx
+    call _VirtualFree@12
+
+    pop edx
+    pop ecx
+    pop edi
+    pop esi
+    pop ebx
+    pop ebp
+    ret
+_search ENDP
+
+END 

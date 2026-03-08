@@ -1,0 +1,149 @@
+Problemy:
+- Rodzaje pamięci
+- Cache, rozmiar tablicy cashowanej i magistral (ostatnie 2 wykłady, część z cache)
+- XMM i inne większe rejestry + rozkazy do tych rejestrów
+- Tryb 64 bit + automatycznie uzupełnienie struktur danych do 64 bitów (np. dane w strukturze 48 bitów i automatycznie uzupełnienie do 64 bitów)
+- Mnożenie, dzielenie, suma i różnica liczb 64-, 96-, 128- bitowych
+- Różne definicji z ostatnich dwóch wykładów PIO, APIC, wyjątki i przerwania, DMA itp.
+- Sektory danych i kodu (ds, cs itp., czas translacji i asemblacji programu)
+- Standardy kodowań stdcall, C itp. i odpowiednie momenty kodowania w tych standardach, np. w C _func, w stdcall _func@4 itp.)
+- 
+
+
+
+Dzień 1-2:
+- Rozwiązać wszystkie zadania teoretyczne z poprzednich lat ile się da bez użycia prezentacji podczas robienia
+- Cała teoria z przedmiotu + fiszki ANKI (kuć te anki), zwrócić uwagę na:
+1) FPU i go rozkazy
+2) XMM i większe rejestry + je rozkazy i co robią
+3) Tryb 64 bitowy
+4) Mnożenie, dzielenie, suma i różnica liczb 64-, 96-, 128- bitowych
+5) Liczba modulo X, np. 5%4 = 1, jak wczytać tę resztę w różnych trybach (16-,32-,64-bit)
+6) Różnica i cechy poszczególnych rodzajów pamięci + bit V
+7) Cache + liczenie ile zajmuje miejsca w pamięci cache, magistrale danych, nr linii itp. i także rozne cache (1. sklada się z dwóch części, 2. sklada się z trzech części) 
+- Jak dzialaja podstawowe rozkazy, jakie flagi ustawiają
+
+Praktyka:
+- rozwiązać 3-4 egzaminy z poprzednich lat + jeden egzamin (lub 2-3 zadania) na tryb 64bit z praktyki
+- Przerobic laborki na tryb 64 bit + xmm i większe rejestry
+- 
+
+
+
+
+Dzień 1-2:
+1) Zadania teoretyczne 1-1.5 godziny
+2) Cała teoria z przedmiotu punkty 1-5) z wyjątkiem 3)
+2.1) Fiszki z rozkazami i jakie flagi ustawiają (co najmniej dla rozkazów skoków)
+3) Laby na xmm + teoria z rozkazów
+4) Rodzaje pamięci + Cache + zadania na liczenie Cache
+5) Tryb 64bit (teoria z labów) + egzamin praktyczny na ten tryb
+
+
+Pytania:
+- Budowa jednostki sterującej i zasady działania jednostki
+- Budowa jednostki sterującej mikroprogramowalnej i zasady jej dzialania
+- Długość cyklu zegarowego w pamięciach DRAM i SDRAM i jak ta długość wpływa na przepustowość DRAM i SDRAM
+- Wyjątki przy dzieleniu edx i w ogóle przy dzieleniu
+- Pole adresowe <-> offset w bazowo-indeksowym adresowaniu
+- Tryby adresowań za pomocą rysunków + wyjasnienie jak dzialaja
+- Sposob komunikacji programisty z kontrolerem DMA
+- W jaki sposob zasada lokalnosci ksztalcuje rozwoj niektórych podzespolow spolczesnych procesorow?
+- Zasady przekazywania parametrów do podprogramow stosowane w procesorach RISC i CISC
+- Porownac procesory RISC i CISC pod katem minimalizacji odwolan do pamięci operacyjnej
+- Omówić sposób transmicji danych z urzadzen zewnętrznych z wykorzystaniem bezposredniego dostepu do pamieci
+- W jakich okolicznosciach podczas obliczen na FPU powstaja NaN
+- Maskowanie bledow i wyjatkow w FPU : jak działa i jak ustawic
+- Roznica pomiedzy trap i fault
+- Wyjasnic koncepcje wyrownywania adresow danych w pamieci operacyjnej i wplyw na wydajnosc nowoczesnych procesorow
+- Opisac technike asocjatywnego dostepu do pamieci podrecznej
+- Hipotetyczny ciag mirooperacji dla incrukcji FCOMI, POP, PUSH, LOOP (i innych)
+- Zasady dzialania VPU (jesli ten temat byl) oraz budowa bloku tego procesora
+- Wyjasnic roznice miedzy statycnym a dynamicznym sposobem przewidywania rozgalezienia w procesorach
+- Wyjasnic wplyw wystepowania przerwan sprzetowych na wydajnosc IPC procesora z przetwarzaniem potokowym i duzej glebokosci potoku
+- Obsługa IRQ i nadpisywanie wektoru przerwan
+- Jakie informacje sa przesylane pomiędzy mikrokontrolerem klawiatury a sterownikiem (kontrolerem) klawiatury (np. 8041) znajdującym się na plycie glownej, a jakie informacje sa lokowane przez sterownik klawiatury w izolowanej przestrzeni wejscia-wyjscia
+- Kiedy używamy REPNE
+- Definicja czasu cyklu (cycle time) w dostępie do pamięci
+- Omowic role bufora rozgalezien (BTB/Branch Targer Buffer) w mikroarchitekturach procesorow
+- Wyjasnic, na czym polega zjawisko hazardu zasobow w procesorze. Opisz wybrana metode, która pozwala na jego zminimalizowanie w procesorach Intel Core
+- Termin ramka stosu
+- Omowic sposób odzworowania zawartości pameici ekranu w trybie graficznym 13H na postac obrazu wyświetlanego na ekranie
+- N-etapowy potok rozkazow może potencjalne zwiekszych przepustowość n-krotnie. Dlaczego rzadko tak jest w praktyce?
+- Roznica miedzy pamiecia L1, L2 itp. oraz miedzy off-chip i on-chip. Wyjasnic przyczyne zjawiska zmiany L2 z off-chip na on-chip
+- W jakim celu wprowadza się w mikroarchitekturach zmiane nazwy rejestru/ow (register renaming)?
+- W jaki sposób w kodzie asemblerowym rezerwuje się obszary danych statycznych i dynamicznych.
+- Czy czas trwania cyklu zegarowego wpływa na prepustowosc pamięci SDRAM. Odpowiedz uzasadnij
+- Na czym polega roznica w przetwarzaniu gridowym i klastrowym?
+- Wyjasnic znaczenie terminu interfejs ABI
+- W jakich okolicznościach FPU (koprocesor) generuje wyjątek niedozwolona operacja?
+- Podac definicje czasu dostępu do pamięci
+- Podaj i objasnic podstawowa roznice w działaniu pamięci SDRAM a DRAM
+- Zakładając, ze pamięci DDR2 i DDR3 sa taktowane z taka sama czestotliwoscia i maja identyczne czasy opóźnień CL, wskazać która z nich oferuje wieksza przepustowość pamięci (bandwidth). Odpowiedz uzasadnić
+- Wymienic obszary zastosowan architektury harwadzkiej w procesorach Intel Core
+- Dlaczego w niektórych rzeczywistych systemach komputerowych nastepuje spadek wydajności przy rozbudowie systemu o nowe jednostki przetwarzające?
+- Opisac role kontrolera klawiatury (np. 8042)
+- Co oznacza określenie wyrównanie naturalne w odniesieniu do polozenia danych w pamięci? Jakie wady ma program, w którym dane nie sa wyrównane naturalnie?
+- Jakie działania należy podjąć aby ewentualne dzielenie przez zero w obliczeniach wykonywanych przez koprocesor arytmetyczny nie powodowalo wyjątku? Odpowiedz uzasadnić.
+- Podac przyczyne stosowania oddzielnej pamięci podręcznej L1 dla rozkazow i danych w procesorach Intel Core i7. Jak nazywa się ten rodzaj architektury?
+- Wyjasnij jaki jest wpływ obsługi przerwan na zużycie energii w nowoczesnych procesorach?
+- Wyjasnij przyczyne powstania wyjątku nr 6 niedozwolony kod w procesorach x86
+- Wyjasnij roznice pomiędzy scisle i lozno powiązanymi systemami MIMD
+- Na czym polega roznica miedzy przesunieciem logicznym a przesunieciem arytmetycznym? 
+- Jaka role w trakcie obsługi przerwania sprzętowego pełni tablica deskryptorów przerwan?
+- Omowic dwa podstawowe sposoby kodowania liczb stałoprzecinkowych ze znakiem
+- Czy przetwarzanie potokowe zmniejsza czas wykonywania rozkazu? Odpowiedz uzasadnic
+- Na czym polega roznica miedzy procesorami wielowątkowymi i wielordzeniowymi
+- W komunikacji z klawiatura używane sa kody precyzji (scan code) i kody nacisniecia (make code). Czym roznia się te kody i który z nich można odczytac poprzez port 60h?
+- Dlaczego rozkaz div edx powoduje zawsze wygenerowania wyjątku procesora
+- Podaj sposób wyznaczenia wartości znacznikow OF i CF przez procesor w trakcie operacji arytmetycznych
+- Przedstaw budowę komórki Flash
+- Dlaczego stosowania ukladow DMA podnosci wydajnsc przetwarzania?
+- Omow technikę statycznego szeregowania rozkazow
+- Podaj definicje atrybutu CI, przy dostępie do pamięci RAM
+- W przypadku stosowania pamięci wirtualnej pojawia się dość często wyjątek nr 14 : blad stronicowania. Wyjasnic przyczyny generowania tego wyjątku.
+- W programie wystapil wyjątek nadmiaru przy dzieleniu. Czy istnieje możliwość kontynuacji tego programu? Odpowiedz uzasadnij
+- Zalozmy, ze chcemy osiagnac liniowe przyspieszenie uzywajac dwunastu procesorow. Jaki procent oryginalnych obliczen może być przeprowadzony sekwencyjnie?
+- Wyjasnic przyczyny, dla których we współczesnych komputerach blokowana jest możliwość bezpośredniego sterowania praca urzadzen zewnętrznych przez programy użytkownika (np. poprzez porty)?
+- Dlaczego w pamięciach podręcznych o dużych rozmiarach nie jest stosowane adresowania asocjacyjne? Czym jest to adresowanie asocjacyjne ?
+- W jakim celu używany jest rozkaz INT 80H w aplikacjach w systemie Linux?
+- Przyjmujac, ze czesc sekwencyjna programu zajmuje 1% czasu jego wykonania okreslic:
+a) maksymalne przyspieszenie przy nieskończonej liczbie procesorow i pomijalnym czasie komunikacji miedzy procesorami?
+b) liczbe procesorow, które należy zastosować w systemie, aby uzyskac dziesięciokrotne przyspieszenie
+- Opisac technikę out-of-order wykonania rozkazow przez procesor
+- Opisac układ/hierarchie pammieci podręcznej stosowanej w procesorze Core i7
+- Jaka zasadnicza wade w technice obsługi urzadzen zewnętrznych komouterow ma metoda aktywnego oczekiwania?
+- Omowic grupy konfliktow zmniejszające wydajność przetwarzania potokowego
+- Wyjasnic na czym polega przewidywanie statyczne wykonania rozkazkow rozgalezien w procesorach.
+
+
+
+
+
+
+
+Dzień 3:
+Teoria:
+- Rozwiazac egzamin teoretyczny 2025
+- Подтянуть хвосты с теории
+- UTF, ASCII, rozmiar ciagu, przemieszczenie elementow ciagu (jak na egzm t. 2025) itp. zadania
+- Przerwania i wyjątki procesora
+- 
+
+Praktyka:
+- rozwiązać egzamin 2025
+- rozwiazac 4 egz praktyczne
+
+
+
+
+Dzień 3:
+1) Pierwsze 4 punkty z Teoria + zrobić fiszki
+2) Powtórzyć fiszki z teorii dnia 1-2
+3) Rozwiązanie dwóch egzaminów praktycznych
+4) Powtórka fiszek
+5) Egz. praktyczne 2 szt. + 2025
+6) Powtórka fiszek
+7) Powtórka Cache, Pamięci, wyjątków i przerwań
+8) Uczenie się poszczególnych schematów z wykładów
+

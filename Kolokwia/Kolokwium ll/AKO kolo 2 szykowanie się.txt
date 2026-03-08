@@ -1,0 +1,81 @@
+AKO kolo 2 szykowanie się:
+
+
+Zadania do powtórnego rozwiązania (problem w rozwiązaniu lub niepoprawnie rozwiązałem):
+N6 - kwadrat liczby przez rekurencje
+
+
+Na koniec szybko powtórzyć:
+1) UTF konwersje + zrobić zadanie z kolo 1
+2) Dzielenie, mnożenie liczb ujemnych
+3) Przejrzeć kolo 1 i go przerobić (oprócz otwartego)
+4) Wyswietlenie utf-8/-16/-32 w messagebox
+5) Wiodące zerowe bajty - co to?
+6) Typy adresowań
+7) Zobaczyć wszystkie wykłady, laby i ćwiczenia z pierwszego kolo
+8) Rejestry stanu, sterujące, stanu koprocesora
+9) Nauczyć się skrótów (rozkazów) i co robią (najważniejsze ze wszystkich prezentacji)
+
+
+https://obrotowy.github.io/ako/kolos2.pdf
+
+
+AKO kolo 2 w 3 dni:
+
+Dzień 1:
+1) Przypomnienie syntax asm
+2) Rozwiązanie kilku (3-7) zadań ze skryptu strójka
+3) Liczby w kodzie U2
+4) Przekazywanie liczb i wskaźników na liczbę i na tablicę oraz odczyt danych ze wskaźnika
+5) Zwrócenie adresu z kodu asm (malloc)
+6) 
+
+
+Dzień 2:
+1) Kodowanie instrukcji/kodu (2 zadania)
+2) Kodowanie liczb zmienno- i stałoprzecinkowych (z mantysą) oraz wszystkie operacje arytmetyczne (suma, różnica, dzielenie i mnożenie) (3-5 zadań, ile jest u strójka)
+3) ascii->utf16 (algorytm + asm kod)
+4) Koprocesor (3 zadania) + teoria z niego (przekazywanie wartości, parametrów, tablic)
+5) Obowiązkowo zrobić zadanie na mnożenie, dzielenie, różnicę i sumę float i double (przez mantysę i wykładniki) (zadanie 21. float_razy_float)
+6) Ułożenie w pamięci struktur + je uzupełnienie o brakujące bity
+7) Zrobić dwa zadania na wskaźniki: 1. parametr jest wskaźnik, 2. parametrem jest wskaźnik na wskaźnik, w obydwu zadaniach należy zmienić wartość najniższego wskaźnika
+8) Powtórzyć jak działają offsety i wczytywanie danych z offsetów
+
+
+Dzień 3:
+0) Skończyć plik Strójka i obrotowego
+1) UTF konwersje + zrobić zadanie z kolo 1
+2) Dzielenie, mnożenie liczb ujemnych
+3) Przejrzeć kolo 1 i go przerobić (oprócz otwartego)
+4) Wyswietlenie utf-8/-16/-32 w messagebox
+5) Wiodące zerowe bajty - co to?
+6) Typy adresowań
+7) Zobaczyć wszystkie wykłady, laby i ćwiczenia z pierwszego kolo + nauczyć się teorii z tego
+
+
+
+Teoria:
+1) Różne możliwe komendy mov: movsd, movsb, movsw itp.
+2) Prezentacja 3 slajd 193 (przykład z cyklicznym wpisywaniem danych esi-edi)
+3) 
+
+
+
+Do zrobienia:
+- !!! 1) Obowiązkowo zrobić zadanie na mnożenie, dzielenie, różnicę i sumę float i double (przez mantysę i wykładniki) (zadanie 21. float_razy_float)
+- Liczby w kodzie U2
+- 2) Przekazywanie liczb i wskaźników na liczbę i na tablicę oraz odczyt danych ze wskaźnika
+- 3) Zwrócenie adresu z kodu asm (malloc)
+- ascii->utf16 (algorytm + asm kod)
+- 1) Koprocesor (3 zadania) + teoria z niego (przekazywanie wartości, parametrów, tablic)
+- 2) Ułożenie w pamięci struktur + je uzupełnienie o brakujące bity
+- 2) Zrobić dwa zadania na wskaźniki: 1. parametr jest wskaźnik, 2. parametrem jest wskaźnik na wskaźnik, w obydwu zadaniach należy zmienić wartość najniższego wskaźnika
+- 2) Powtórzyć jak działają offsety i wczytywanie danych z offsetów
+- Dzień 3 1) - 7)
+- 4) kodowanie instrukcji 15 zadań
+
+1) koprocesor + float/double/80bit (zostało 80bit + trzeba zrobić normalizację liczby float/double/80bit (dla wszystkich) 	)
+2) Wskazniki i tablicy jako parametry funkcji, struktury danych i je uzupełnienie (struktury compilator based)
+3) malloc i free zadania
+4) Kodowanie instrukcji
+5) Dzień 3 + liczby w u2 + utf i ascii

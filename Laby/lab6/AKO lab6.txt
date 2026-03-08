@@ -1,0 +1,62 @@
+AKO lab6:
+Podprogram obsługi przerwania kończy rozkaz IRET, która powoduje wznowienie
+wykonywania przerwanego programu poprzez odtworzenie rejestrów IP, CS i FLAGS, na
+podstawie śladu zapamiętanego na stosie
+
+segment:offset :
+Przykładowo, 32-bitowy programowy licznik czasu BIOSu umieszczony jest w lokacji
+pamięci o adresie 40H:6CH, tzn. w lokacji pamięci o adresie fizycznym 40H * 16 + 6CH =
+46CH. W odniesieniu do podanego schematu adresowani mówimy, że adres lokacji pamięci
+został wyrażony w postaci 
+segment : offset
+
+
+IRQ:
+Po zapisaniu śladu na stosie procesor odszukuje w tablicy wektorów przerwań adres
+procedury obsługi przerwania i rozpoczyna ją wykonywać. Numer wektora przerwania, w
+którym zawarty jest adres procedury obsługi zależy w ustalony sposób od numeru linii IRQ,
+poprzez którą nadszedł sygnał przerwania. W przypadku programów 16-bitowych
+wykonywanych w systemie Windows/DOS numer wektora stanowi powiększony o 8 numer
+linii IRQ (dla linii IRQ 8 - IRQ 15 numer powiększany jest o 104).
+
+Klawiatura:
+
+Odtworzony kod pozycji (lub kod pozycji zwiększony o 128) zostaje udostępniony w porcie
+60H – kod pozycji naciśniętego (lub zwolnionego) klawisza można więc odczytać za pomocą
+rozkazu in al, 60H . Jednocześnie generowany jest sygnał przerwania poprzez linię
+IRQ 1, z którą skojarzony jest wektor przerwania nr 9.
+
+
+
+
+adres fizyczny:
+16 * zawartość rejestru segmentowego + offset (wszystko w bajtach)
+
+
+przerwanie:
+
+Następnie zapisuje położenie w pamięci (adres) kolejnego rozkazu, który zostałby wykonany, gdyby nie nadeszło przerwanie. Położenie to, określane jako ślad przerwania, zapisywane jest na stosie (w trybie rzeczywistym elementy stosu są 16-bitowe).
+
+znaczniki (FLAGS)
+CS (code segment)
+IP (instruction pointer)
+(pola 16 bitowe)
+
+
+
+W procesorach zgodnych z architekturą x86 warunkiem przyjęcia przerwania
+sprzętowego (generowanego przez urządzenie zewnętrzne) jest stan znacznika IF = 1.
+Znacznik IF (ang. interrupt flag) w rejestrze znaczników (bit nr 9) określa zezwolenie na
+przyjmowanie przerwań: procesor może przyjmować przerwania tylko wówczas, gdy IF=1.
+Znacznik IF jest automatycznie zerowany w chwili przyjęcia przerwania
+
+
+
+Przez linie IRQ nadchodzi sygnał przerwania
+
+W przypadku programów 16-bitowych
+wykonywanych w systemie Windows/DOS numer wektora stanowi powiększony o 8 numer
+linii IRQ (dla linii IRQ 8 - IRQ 15 numer powiększany jest o 104).
+
+
+System przerwań jest obsługiwany przez APIC (2 układy 8259)
